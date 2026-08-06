@@ -541,6 +541,7 @@
       updateCrops();
       /* card counts differ per brand — re-measure the horizontal scrub */
       ScrollTrigger.refresh();
+      if (typeof exParallax === 'function') exParallax();
     }
     window.__exSetBrand = exSetBrand;
 
@@ -605,13 +606,27 @@
       });
     });
 
+    /* parallax: card images drift slower than the track while it scrubs,
+       zoomed slightly so their edges never show */
+    function exParallax(){
+      var vw = window.innerWidth;
+      document.querySelectorAll('.ex-card.brand-on .ex-base').forEach(function(im){
+        var r = im.getBoundingClientRect();
+        if (r.right < 0 || r.left > vw || !r.width) return;
+        var p = ((r.left + r.width / 2) - vw / 2) / vw;  /* ~ -0.6 .. 0.6 */
+        gsap.set(im, { xPercent: p * 6, scale: 1.1 });
+      });
+    }
+    window.addEventListener('resize', exParallax);
+
     exSetBrand('rbtv');
     requestAnimationFrame(updateCrops);
+    requestAnimationFrame(exParallax);
 
     gsap.fromTo('.ex-card.brand-on', { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: 1.1, ease: 'power4.out', stagger: 0.12, scrollTrigger: { trigger: '.exlib', start: 'top 60%', once: true } });
     gsap.timeline({ scrollTrigger: { trigger: '.exlib', start: 'top top', end: 'bottom bottom', scrub: 1, invalidateOnRefresh: true }, defaults: { ease: 'none' } })
       .to({}, { duration: 0.7 })
-      .to(exTrack, { x: function(){ return -(exTrack.scrollWidth - 1266); }, duration: 4 })
+      .to(exTrack, { x: function(){ return -(exTrack.scrollWidth - 1266); }, duration: 4, onUpdate: exParallax })
       .to({}, { duration: 0.9 });
     gsap.to('.exlib-canvas', { opacity: 0, ease: 'none', scrollTrigger: { trigger: '.exlib', start: 'bottom 40%', end: 'bottom 8%', scrub: true } });
   }
