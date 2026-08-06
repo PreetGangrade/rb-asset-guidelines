@@ -132,11 +132,45 @@
     });
   }
 
-  /* ---------- footer: quiet fade in ---------- */
+  /* ---------- footer: springy arrival + morphing word ---------- */
   if (document.querySelector('.footer-card')){
-    gsap.from('.footer-card', {
-      opacity: 0, y: 24, duration: .9, ease: 'power4.out',
-      scrollTrigger: { trigger: '.footer', start: 'top 80%', once: true }
+    gsap.set('.footer-card', { y: 150, opacity: 0 });
+    gsap.set(['.fc-head > *', '.fc-bottom > *'], { y: 40, opacity: 0 });
+
+    var fcWords = ['future', 'stories', 'impact', 'legends'];
+    var fcEl = document.getElementById('fc-word');
+    function fcSplit(word){
+      fcEl.innerHTML = word.split('').map(function(ch){
+        return '<span class="fc-ch">' + ch + '</span>';
+      }).join('');
+      return fcEl.querySelectorAll('.fc-ch');
+    }
+    var fcIndex = 0;
+    fcSplit(fcWords[0]);
+
+    function fcCycle(){
+      gsap.to(fcEl.querySelectorAll('.fc-ch'), {
+        y: -34, opacity: 0, filter: 'blur(6px)', duration: .38,
+        ease: 'power2.in', stagger: .032,
+        onComplete: function(){
+          fcIndex = (fcIndex + 1) % fcWords.length;
+          gsap.fromTo(fcSplit(fcWords[fcIndex]),
+            { y: 38, opacity: 0, filter: 'blur(6px)' },
+            { y: 0, opacity: 1, filter: 'blur(0px)', duration: .6, ease: 'back.out(1.7)', stagger: .038 });
+          gsap.delayedCall(2.6, fcCycle);
+        }
+      });
+    }
+
+    ScrollTrigger.create({
+      trigger: '.footer', start: 'top 70%', once: true,
+      onEnter: function(){
+        gsap.timeline()
+          .to('.footer-card', { y: 0, opacity: 1, duration: 1.25, ease: 'back.out(1.2)' })
+          .to('.fc-head > *', { y: 0, opacity: 1, duration: .9, ease: 'back.out(1.6)', stagger: .1 }, '-=0.75')
+          .to('.fc-bottom > *', { y: 0, opacity: 1, duration: .8, ease: 'power3.out', stagger: .08 }, '-=0.55');
+        gsap.delayedCall(3, fcCycle);
+      }
     });
   }
 
@@ -281,10 +315,72 @@
     defaults: { ease: 'none' }
   })
     .fromTo('.fg-copy', { y: 0, opacity: 1 }, { y: -50, opacity: 0, duration: .45, immediateRender: false }, 0)
-    .fromTo('.fg-nav', { y: 0, autoAlpha: 1 }, { y: -40, autoAlpha: 0, duration: .45, immediateRender: false }, 0)
+    .fromTo('.fg-nav:not(.fg-nav--float)', { y: 0, autoAlpha: 1 }, { y: -40, autoAlpha: 0, duration: .45, immediateRender: false }, 0)
     .fromTo('.fg-monitor', { y: 0, opacity: 1 }, { y: -30, opacity: 0, duration: .38, immediateRender: false }, 0)
     /* photo is fully gone before the surface melts — no cutout seams */
     .fromTo(['.hero-canvas', '.hero-sticky', '.hero-fig'], { backgroundColor: '#ffffff' }, { backgroundColor: '#000f1e', duration: .55, immediateRender: false }, .42);
+
+  /* ---------- floating nav: reveal on scroll-up (headroom pattern) ----------
+     The hero nav is owned by the hero exit scrub above; past the hero a dark
+     glass clone takes over. It only appears on deliberate upward scroll
+     (small accumulator so touchpad jitter never triggers it), hides again on
+     scroll-down, and stands down inside the hero zone where the original
+     nav scrubs back in. */
+  (function(){
+    var srcNav = document.querySelector('.fg-nav');
+    if (!srcNav) return;
+    var nav = srcNav.cloneNode(true);
+    nav.classList.add('fg-nav--float');
+    nav.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(nav);
+    gsap.set(nav, { yPercent: -110, autoAlpha: 0 });
+
+    var SHOW_INTENT = 16;  /* px scrolled up before revealing */
+    var HIDE_INTENT = 24;  /* px scrolled down before hiding */
+    var shown = false, upRun = 0, downRun = 0, lastY = window.scrollY;
+
+    function show(){
+      if (shown) return; shown = true;
+      nav.setAttribute('aria-hidden', 'false');
+      gsap.to(nav, { yPercent: 0, autoAlpha: 1, duration: .55, ease: 'expo.out', overwrite: true });
+    }
+    function hide(fast){
+      if (!shown) return; shown = false;
+      nav.setAttribute('aria-hidden', 'true');
+      gsap.to(nav, { yPercent: -110, autoAlpha: 0, duration: fast ? .25 : .4, ease: 'power2.in', overwrite: true });
+    }
+
+    /* hero zone = wherever the original nav lives. The hero exit scrub fades
+       it out between hero-bottom 96% -> 50% of the viewport, so the floating
+       nav must be gone before hero-bottom climbs back past ~45% — otherwise
+       the two bars overlap. */
+    var hero = document.querySelector('.hero-fig');
+    function inHeroZone(){
+      if (!hero) return window.scrollY < window.innerHeight * .8;
+      return hero.getBoundingClientRect().bottom > window.innerHeight * .45;
+    }
+
+    window.addEventListener('scroll', function(){
+      var y = window.scrollY;
+      var dy = y - lastY;
+      lastY = y;
+      if (inHeroZone()){ upRun = downRun = 0; hide(true); return; }
+      if (dy < 0){
+        downRun = 0; upRun -= dy;
+        if (upRun > SHOW_INTENT) show();
+      } else if (dy > 0){
+        upRun = 0; downRun += dy;
+        if (downRun > HIDE_INTENT) hide();
+      }
+    }, { passive: true });
+
+    /* anchor click from the floating nav = intent to travel down the page —
+       tuck the nav away immediately so it doesn't hang over the destination */
+    nav.addEventListener('click', function(e){
+      var a = e.target.closest ? e.target.closest('a[href^="#"]') : null;
+      if (a) hide();
+    });
+  })();
 
   gsap.to('.truth-canvas', {
     opacity: 0, ease: 'none',
@@ -397,7 +493,8 @@
           im.classList.toggle('on', im.getAttribute('data-brand') === tb.getAttribute('data-brand'));
         });
         placeInd(true);
-        /* examples gallery stays on the Red Bull TV set regardless of brand tab */
+        /* the examples gallery follows the selected brand */
+        if (window.__exSetBrand) window.__exSetBrand(tb.getAttribute('data-brand'));
       });
     });
   }
@@ -406,7 +503,7 @@
   if (document.querySelector('.tvwall')){
     var wtl = gsap.timeline({
       scrollTrigger: { trigger: '.tvwall', start: 'top top', end: 'bottom bottom', scrub: 1.2 },
-      defaults: { ease: 'none' }
+      defaults: { ease: 'none', force3D: true }
     });
     /* note slides out left as the devices sweep in from the right — one gesture */
     wtl.fromTo('.tvw-note', { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: .5, ease: 'power2.out' })
@@ -442,26 +539,47 @@
         c.classList.toggle('brand-on', c.getAttribute('data-brand') === brand);
       });
       updateCrops();
+      /* card counts differ per brand — re-measure the horizontal scrub */
+      ScrollTrigger.refresh();
     }
     window.__exSetBrand = exSetBrand;
 
-    /* size each hover crop window to the max centred rect of the chosen ratio */
+    /* size each hover crop window to the max rect of the chosen ratio,
+       clamped inside the container. Windows are centred, except the 7:2
+       banner: it anchors on the card's focal point (data-focal-x/y,
+       image-space fractions) so the banner is cut from the subject. The
+       focus <img> replays the centred cover crop the CSS applies to the
+       base, so the window shows exactly what that ratio would keep. */
     function updateCrops(){
+      var isBanner = exAR >= 3;
       document.querySelectorAll('.ex-card.brand-on').forEach(function(card){
         var wrap = card.querySelector('.ex-imgwrap');
         var cw = wrap.offsetWidth, ch = wrap.offsetHeight;
         if (!cw) return;
+        var fx = parseFloat(card.getAttribute('data-focal-x') || '.5');
+        var fy = parseFloat(card.getAttribute('data-focal-y') || '.5');
+        var focus = card.querySelector('.ex-focus');
+        var im = focus.querySelector('img');
+        /* displayed (cover) size of the image inside the container */
+        var nw = im.naturalWidth || 16, nh = im.naturalHeight || 9;
+        var cover = Math.max(cw / nw, ch / nh);
+        var dw = nw * cover, dh = nh * cover;
+        /* focal-anchored cover crop, matching the CSS base object-position */
+        var offX = (dw - cw) * fx, offY = (dh - ch) * fy;
         var winW = Math.min(cw, ch * exAR), winH = winW / exAR;
         if (winH > ch){ winH = ch; winW = winH * exAR; }
-        /* inset the crop so it sits centred with breathing room, never edge-to-edge */
+        /* inset so the window never sits edge-to-edge */
         var scale = 0.82;
         winW *= scale; winH *= scale;
-        var left = (cw - winW) / 2, top = (ch - winH) / 2;
-        var focus = card.querySelector('.ex-focus');
-        focus.style.cssText = 'position:absolute;overflow:hidden;border-radius:8px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.85);transition:opacity 300ms ease-out;left:'+left+'px;top:'+top+'px;width:'+winW+'px;height:'+winH+'px';
+        /* window centred in the container; the 7:2 banner instead anchors on
+           the subject's face (focal point maps to fx*cw / fy*ch) */
+        var ax = isBanner ? fx * cw : cw / 2;
+        var ay = isBanner ? fy * ch : ch / 2;
+        var left = Math.min(Math.max(ax - winW / 2, 0), cw - winW);
+        var top  = Math.min(Math.max(ay - winH / 2, 0), ch - winH);
+        focus.style.cssText = 'position:absolute;overflow:hidden;border-radius:8px;box-shadow:inset 0 0 0 2px rgba(255,255,255,.85);transition:opacity 420ms cubic-bezier(.23,1,.32,1);will-change:opacity;left:'+left+'px;top:'+top+'px;width:'+winW+'px;height:'+winH+'px';
         focus.setAttribute('data-label', exLabel);
-        var im = focus.querySelector('img');
-        im.style.cssText = 'position:absolute;max-width:none;display:block;width:'+cw+'px;height:'+ch+'px;left:'+(-left)+'px;top:'+(-top)+'px';
+        im.style.cssText = 'position:absolute;max-width:none;display:block;width:'+dw+'px;height:'+dh+'px;left:'+(-(offX + left))+'px;top:'+(-(offY + top))+'px';
       });
       document.querySelectorAll('.ex-focus').forEach(function(f){
         f.querySelector('::after');
@@ -470,6 +588,10 @@
       if (st) st.textContent = exLabel;
     }
     window.addEventListener('resize', updateCrops);
+    /* cover math needs naturalWidth — refresh as images arrive */
+    document.querySelectorAll('.ex-focus img').forEach(function(im){
+      if (!im.complete) im.addEventListener('load', updateCrops, { once: true });
+    });
 
     var exInd = document.querySelector('.ex-ind');
     function placeExInd(){ var on = document.querySelector('.ex-rtab.on'); if (on && exInd) gsap.to(exInd, { x: on.offsetLeft - 4, width: on.offsetWidth, duration: .35, ease: 'power4.out' }); }
@@ -492,6 +614,64 @@
       .to(exTrack, { x: function(){ return -(exTrack.scrollWidth - 1266); }, duration: 4 })
       .to({}, { duration: 0.9 });
     gsap.to('.exlib-canvas', { opacity: 0, ease: 'none', scrollTrigger: { trigger: '.exlib', start: 'bottom 40%', end: 'bottom 8%', scrub: true } });
+  }
+
+  /* ---------- delivery: cards assemble on scroll, chips cascade in last ---------- */
+  if (document.querySelector('.delivery')){
+    gsap.set('.dl-card', { y: 72, opacity: 0 });
+    gsap.set('.dl-chips > *', { y: 14, opacity: 0 });
+    gsap.set('.dl-title', { y: 28, opacity: 0 });
+    var dtl = gsap.timeline({
+      scrollTrigger: { trigger: '.delivery', start: 'top top', end: 'bottom bottom', scrub: 1 },
+      defaults: { ease: 'none' }
+    });
+    dtl.to('.dl-title', { y: 0, opacity: 1, duration: .3, ease: 'power2.out' })
+       .to({}, { duration: .15 });
+    gsap.utils.toArray('.dl-card').forEach(function(card){
+      dtl.to(card, { y: 0, opacity: 1, duration: .6, ease: 'power2.out' })
+         /* the chips are the payload: they cascade in once the card lands */
+         .to(card.querySelectorAll('.dl-chips > *'),
+             { y: 0, opacity: 1, duration: .3, ease: 'power2.out', stagger: .05 }, '-=0.22')
+         .to({}, { duration: .34 });
+    });
+    dtl.to({}, { duration: .5 });
+
+    /* UBA.PSD pill: download + a burst of brand confetti */
+    var dlPsd = document.querySelector('.dl-chips a.dl-shine');
+    if (dlPsd){
+      dlPsd.addEventListener('click', function(){
+        gsap.fromTo(dlPsd, { scale: .92 }, { scale: 1, duration: .5, ease: 'back.out(2.4)' });
+        var r = dlPsd.getBoundingClientRect();
+        var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+        var colors = ['#DB0A40', '#FFD27A', '#0B63E5', '#00162b', '#ffffff'];
+        for (var i = 0; i < 36; i++){
+          var p = document.createElement('i');
+          var s = 5 + Math.random() * 5;
+          p.style.cssText = 'position:fixed;left:0;top:0;width:' + s + 'px;height:' +
+            (Math.random() < .4 ? s : s * .55) + 'px;background:' + colors[i % colors.length] +
+            ';border-radius:' + (Math.random() < .3 ? '50%' : '1px') +
+            ';pointer-events:none;z-index:200;will-change:transform';
+          document.body.appendChild(p);
+          var ang = (-90 + (Math.random() * 150 - 75)) * Math.PI / 180;
+          var v = 240 + Math.random() * 340;
+          var vx = Math.cos(ang) * v, vy = Math.sin(ang) * v;
+          var d = 1.15 + Math.random() * .65;
+          gsap.set(p, { x: cx, y: cy, rotation: Math.random() * 360 });
+          gsap.to(p, { x: cx + vx, duration: d, ease: 'power1.out' });
+          gsap.to(p, { y: cy + vy * .4, duration: d * .38, ease: 'power2.out' });
+          gsap.to(p, { y: cy + 420 + Math.random() * 180, duration: d * .62, delay: d * .38, ease: 'power1.in' });
+          gsap.to(p, { rotation: '+=' + (Math.random() * 540 - 270), duration: d, ease: 'none' });
+          gsap.to(p, { opacity: 0, duration: .3, delay: d - .3,
+            onComplete: function(el){ el.remove(); }, onCompleteParams: [p] });
+        }
+      });
+    }
+
+    /* standard section hand-off: ease away before the footer arrives */
+    gsap.to('.delivery-canvas', {
+      opacity: 0, ease: 'none',
+      scrollTrigger: { trigger: '.delivery', start: 'bottom 40%', end: 'bottom 8%', scrub: true }
+    });
   }
 
   /* ---------- comparison reveals ---------- */

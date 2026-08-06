@@ -162,6 +162,29 @@ h1,h2,h3{font-weight:700;letter-spacing:-0.025em;line-height:1.04;text-wrap:bala
   .fg-pill-cta:hover{background:#032a4e;box-shadow:none}
 }
 
+/* floating nav — runtime clone of .fg-nav; slides in when the user scrolls
+   back up past the hero (headroom pattern). Dark glass so it reads on both
+   the navy sections and the light ones. Hidden state is owned by GSAP. */
+.fg-nav--float{
+  z-index:120;
+  padding:12px clamp(28px,5.5vw,80px);
+  background:rgba(2,12,24,.58);
+  -webkit-backdrop-filter:blur(22px) saturate(150%);backdrop-filter:blur(22px) saturate(150%);
+  box-shadow:0 1px 0 rgba(255,255,255,.07),0 14px 44px rgba(0,8,16,.32);
+  visibility:hidden; /* pre-JS no-flash guard; GSAP owns transform + visibility */
+  will-change:transform;
+}
+.fg-nav--float .fg-logo svg{color:#fff;height:28px}
+.fg-nav--float .fg-pill{background:rgba(255,255,255,.12);color:#fff}
+@media (hover:hover) and (pointer:fine){
+  .fg-nav--float .fg-pill:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.16)}
+}
+.fg-nav--float .fg-pill-cta{background:#f8f8f8;color:#00162b}
+.fg-nav--float .fg-pill-cta:focus-visible{outline:2px solid rgba(248,248,248,.6)}
+@media (hover:hover) and (pointer:fine){
+  .fg-nav--float .fg-pill-cta:hover{background:#fff;box-shadow:none}
+}
+
 /* headline */
 .fg-copy{position:absolute;left:59px;top:112px;width:852px;z-index:3}
 .fg-copy h1{
@@ -451,7 +474,7 @@ h1,h2,h3{font-weight:700;letter-spacing:-0.025em;line-height:1.04;text-wrap:bala
   position:absolute;left:50%;top:50%;width:1440px;height:800px;
   transform:translate(-50%,-50%) scale(var(--hs));
 }
-.fo-heads{position:absolute;left:50%;transform:translateX(-50%);top:32px;width:918px;height:79px;display:grid}
+.fo-heads{position:absolute;left:50%;transform:translateX(-50%);top:48px;width:918px;height:79px;display:grid}
 .fo-head{
   grid-area:1/1;opacity:0;
   font-family:var(--font-bull);font-weight:700;
@@ -460,11 +483,14 @@ h1,h2,h3{font-weight:700;letter-spacing:-0.025em;line-height:1.04;text-wrap:bala
 .fo-head:first-child{opacity:1}
 .fo-hint{font-weight:500;font-size:.5em;color:rgba(255,255,255,.4);vertical-align:middle;margin-left:6px}
 .fo-stage{
-  position:absolute;left:50%;transform:translateX(-50%);top:129px;
+  position:absolute;left:50%;transform:translateX(-50%);top:140px;
   width:1071px;height:576px;border-radius:12px;
-  border:6px solid rgba(255,255,255,.1);overflow:hidden;
+  border:1px solid rgba(255,255,255,.10);overflow:hidden;
   background:#02060c;
-  box-shadow:0 30px 80px rgba(0,0,0,.45), 0 4px 16px rgba(0,0,0,.35);
+  box-shadow:
+    0 0 28px rgba(255,255,255,.05),
+    0 30px 80px rgba(0,0,0,.45),
+    0 4px 16px rgba(0,0,0,.35);
 }
 .fo-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 380ms ease}
 .fo-img.on{opacity:1}
@@ -481,7 +507,7 @@ h1,h2,h3{font-weight:700;letter-spacing:-0.025em;line-height:1.04;text-wrap:bala
 }
 .fo-sketch{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
 .fo-tabs{
-  position:absolute;left:50%;transform:translateX(-50%);top:722px;
+  position:absolute;left:50%;transform:translateX(-50%);top:736px;
   display:flex;gap:2px;padding:4px;border-radius:9999px;
   background:rgba(255,255,255,.1);
 }
@@ -514,13 +540,22 @@ h1,h2,h3{font-weight:700;letter-spacing:-0.025em;line-height:1.04;text-wrap:bala
 .tvwall-canvas{
   position:absolute;left:50%;top:50%;width:1440px;height:800px;
   transform:translate(-50%,-50%) scale(var(--hs));
+  /* clip to the stage: parked devices must never peek in on ultrawide screens */
+  overflow:hidden;
 }
+
 .tvw-note{
   position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
   width:918px;text-align:center;opacity:0;
   font-family:var(--font-bull);font-weight:700;font-size:32px;line-height:44px;color:#fff;
 }
-.tvx{position:absolute;left:50%;top:55px;width:1128px;height:690px;transform:translateX(-50%);will-change:transform}
+.tvx{position:absolute;left:50%;top:63px;width:1128px;height:690px;transform:translateX(-50%);will-change:transform}
+/* soft spotlight pinned behind the TV — moves and appears with it */
+.tvx::before{
+  content:"";position:absolute;z-index:-1;left:50%;top:44%;width:1560px;height:980px;
+  transform:translate(-50%,-50%);pointer-events:none;
+  background:radial-gradient(44% 40% at 50% 50%, rgba(150,190,255,.09), rgba(150,190,255,.025) 55%, transparent 72%);
+}
 .tvx-body{
   position:absolute;left:0;top:0;width:1128px;height:647px;
   background:linear-gradient(180deg,#101318,#07090d);
@@ -530,18 +565,19 @@ h1,h2,h3{font-weight:700;letter-spacing:-0.025em;line-height:1.04;text-wrap:bala
 .tvx-screen{
   position:absolute;left:15px;top:15px;width:1098px;height:618px;
   background:#03060b;border-radius:4px;overflow:hidden;
-  box-shadow:inset 0 0 18px rgba(0,0,0,.8);
 }
 .tvx-shot{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity 380ms ease}
 .tvx-shot.on{opacity:1}
-.tvlap{position:absolute;left:620px;top:421px;width:560px;height:327px;will-change:transform}
-.tvtab{position:absolute;left:950px;top:389px;width:280px;height:363px;will-change:transform}
-.tvtab-shot{position:absolute;inset:0;width:100%;height:auto;display:block;opacity:0;transition:opacity 380ms ease;filter:drop-shadow(0 22px 36px rgba(0,0,0,.55))}
+.tvlap{position:absolute;left:620px;top:413px;width:560px;height:337px;will-change:transform;filter:drop-shadow(0 26px 44px rgba(0,0,0,.55))}
+.tvtab{position:absolute;left:950px;top:387px;width:280px;height:363px;will-change:transform;filter:drop-shadow(0 22px 36px rgba(0,0,0,.55))}
+/* height-anchored: keeps the tablet on the composition's ground line even
+   when the source render's aspect ratio differs slightly */
+.tvtab-shot{position:absolute;left:0;right:0;bottom:0;margin:0 auto;width:auto;height:100%;display:block;opacity:0;transition:opacity 380ms ease}
 .tvtab-shot.on{opacity:1}
-.tvmob{position:absolute;left:1192px;top:482px;width:135px;height:273px;will-change:transform}
-.tvmob-shot{position:absolute;inset:0;width:100%;height:auto;display:block;opacity:0;transition:opacity 380ms ease;filter:drop-shadow(0 16px 26px rgba(0,0,0,.6))}
+.tvmob{position:absolute;left:1192px;top:477px;width:135px;height:273px;will-change:transform;filter:drop-shadow(0 16px 26px rgba(0,0,0,.6))}
+.tvmob-shot{position:absolute;left:0;right:0;bottom:0;width:100%;height:auto;display:block;opacity:0;transition:opacity 380ms ease}
 .tvmob-shot.on{opacity:1}
-.tvlap-shot{position:absolute;inset:0;width:100%;height:auto;display:block;opacity:0;transition:opacity 380ms ease;filter:drop-shadow(0 26px 44px rgba(0,0,0,.55))}
+.tvlap-shot{position:absolute;left:0;right:0;bottom:0;width:100%;height:auto;display:block;opacity:0;transition:opacity 380ms ease}
 .tvlap-shot.on{opacity:1}
 .tvx-leg{
   position:absolute;top:647px;width:27px;height:40px;
@@ -570,7 +606,7 @@ h1,h2,h3{font-weight:700;letter-spacing:-0.025em;line-height:1.04;text-wrap:bala
   position:absolute;left:50%;top:50%;width:1440px;height:800px;
   transform:translate(-50%,-50%) scale(var(--hs));
 }
-.ex-head{position:absolute;left:80px;top:24px;display:flex;align-items:center;gap:24px}
+.ex-head{position:absolute;left:80px;top:64px;display:flex;align-items:center;gap:24px}
 .ex-title{font-family:var(--font-bull);font-weight:700;font-size:24px;line-height:35px;color:rgba(255,255,255,.6)}
 .ex-ratios{position:relative;display:flex;gap:2px;height:36px;padding:4px;border-radius:9999px;background:rgba(255,255,255,.1)}
 .ex-ind{position:absolute;top:4px;left:4px;height:28px;width:0;border-radius:9999px;background:#00162b;box-shadow:0 2px 8px rgba(0,0,0,.3);pointer-events:none}
@@ -580,14 +616,17 @@ h1,h2,h3{font-weight:700;letter-spacing:-0.025em;line-height:1.04;text-wrap:bala
 .ex-rtab:focus-visible{outline:2px solid rgba(255,255,255,.6);outline-offset:2px}
 @media (hover:hover) and (pointer:fine){ .ex-rtab:hover:not(.on){color:rgba(255,255,255,.85)} }
 
-.ex-track{position:absolute;left:80px;top:82px;display:flex;gap:40px;align-items:center;will-change:transform}
+.ex-track{position:absolute;left:80px;top:136px;display:flex;gap:40px;align-items:center;will-change:transform}
 .ex-card{position:relative;flex:none;margin:0;display:none}
 .ex-card.brand-on{display:block}
-.ex-imgwrap{position:relative;height:635px;width:auto;border-radius:12px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
-.ex-base{height:635px;width:auto;display:block}
-.ex-dim{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity 300ms ease-out}
-.ex-dim img{width:100%;height:100%;object-fit:cover;display:block;filter:blur(9px) brightness(.5);transform:scale(1.06)}
-.ex-focus{position:absolute;overflow:hidden;border-radius:8px;opacity:0;pointer-events:none;box-shadow:inset 0 0 0 2px rgba(255,255,255,.85);transition:opacity 300ms ease-out}
+/* card container is always 16:9; the cover crop anchors on the focal point
+   (--fx/--fy per card) so faces never clip. Crop windows stay centred,
+   except the 7:2 banner which anchors on the focal point (JS). */
+.ex-imgwrap{position:relative;height:540px;width:960px;border-radius:12px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+.ex-base{width:100%;height:100%;object-fit:cover;object-position:var(--fx,50%) var(--fy,50%);display:block}
+.ex-dim{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity 420ms var(--ease);will-change:opacity}
+.ex-dim img{width:100%;height:100%;object-fit:cover;object-position:var(--fx,50%) var(--fy,50%);display:block;filter:blur(9px) brightness(.5);transform:scale(1.06) translateZ(0)}
+.ex-focus{position:absolute;overflow:hidden;border-radius:8px;opacity:0;pointer-events:none;box-shadow:inset 0 0 0 2px rgba(255,255,255,.85);transition:opacity 420ms var(--ease);will-change:opacity}
 .ex-focus img{position:absolute;max-width:none;display:block}
 .ex-focus::after{content:attr(data-label);position:absolute;left:0;right:0;bottom:8px;text-align:center;font-family:var(--font-mono);font-size:11px;letter-spacing:.22em;color:rgba(255,255,255,.85)}
 @media (hover:hover) and (pointer:fine){
@@ -598,10 +637,70 @@ h1,h2,h3{font-weight:700;letter-spacing:-0.025em;line-height:1.04;text-wrap:bala
 .ex-badge svg{width:16px;height:16px;flex:none}
 .ex-badge.safe{background:#159d48}
 .ex-badge.unsafe{background:var(--red)}
-.ex-cap{margin-top:23px;max-width:952px;font-family:var(--font-bull);font-weight:500;font-size:18px;line-height:26px;color:rgba(255,255,255,.6)}
+.ex-cap{margin-top:20px;max-width:900px;font-family:var(--font-bull);font-weight:500;font-size:18px;line-height:26px;color:rgba(255,255,255,.6)}
 .reduced .exlib{height:auto}
 .reduced .exlib-sticky{position:static;height:auto;padding:96px 0}
 .reduced .ex-track{position:static;overflow-x:auto;padding:0 24px}
+
+/* ---------- delivery: "What to deliver" (Figma 859:50896), pinned reveal ---------- */
+.delivery{position:relative;height:300vh;background:var(--bg)}
+.delivery-sticky{
+  position:sticky;top:0;height:100svh;overflow:hidden;
+  display:grid;place-items:center;background:var(--bg);
+}
+.delivery-canvas{
+  position:absolute;left:50%;top:50%;width:1440px;height:800px;
+  transform:translate(-50%,-50%) scale(var(--hs));
+}
+.dl-title{
+  position:absolute;left:80px;top:60px;
+  font-family:var(--font-bull);font-weight:700;
+  font-size:32px;line-height:79px;color:#fff;
+}
+.dl-cards{position:absolute;left:80px;top:219px;width:1280px;display:flex;gap:24px}
+.dl-card{
+  flex:1;height:500px;display:flex;flex-direction:column;
+  background:#fff;border:1px solid #fbfbfe;border-radius:12px;
+  box-shadow:0 2px 6px rgba(25,33,61,.1);
+  padding:20px 32px;overflow:hidden;
+}
+.dl-num{font-family:var(--font-bull);font-weight:700;font-size:48px;line-height:79px;color:rgba(0,0,0,.2)}
+.dl-name{font-family:var(--font-bull);font-weight:700;font-size:22px;line-height:20px;color:#00162b}
+.dl-desc{margin-top:40px;font-family:var(--font-bull);font-weight:400;font-size:14px;line-height:1.5;color:rgba(0,15,30,.6)}
+.dl-chips{margin-top:auto;padding-bottom:8px;display:flex;flex-wrap:wrap;gap:8px 10px}
+.dl-chips span,.dl-chips a{
+  display:inline-flex;align-items:center;height:29px;padding:0 16px;border-radius:9999px;
+  background:rgba(0,15,30,.05);
+  border:1px solid rgba(0,15,30,.05);
+  font-family:var(--font-bull);font-weight:500;font-size:14px;line-height:19px;color:#000f1e;
+  white-space:nowrap;
+}
+/* UBA.PSD pill: a quiet highlight orbits the stroke, continuously */
+@property --dl-shine-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
+.dl-chips .dl-shine{position:relative;border-color:transparent}
+.dl-chips .dl-shine::after{
+  content:"";position:absolute;inset:-1px;border-radius:9999px;padding:1px;
+  background:conic-gradient(from var(--dl-shine-angle),
+    rgba(0,15,30,.05) 0deg 290deg,
+    rgba(0,15,30,.42) 325deg,
+    rgba(0,15,30,.05) 360deg);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;
+  mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  mask-composite:exclude;
+  animation:dl-ring 3.4s linear infinite;
+  pointer-events:none;
+}
+@keyframes dl-ring{to{--dl-shine-angle:360deg}}
+@media (prefers-reduced-motion:reduce){
+  .dl-chips .dl-shine{border-color:rgba(0,15,30,.05)}
+  .dl-chips .dl-shine::after{animation:none;display:none}
+}
+/* the UBA.PSD pill is a real download button */
+.dl-chips a.dl-shine{cursor:pointer;transition:transform 160ms var(--ease),background 180ms ease}
+@media (hover:hover) and (pointer:fine){ .dl-chips a.dl-shine:hover{background:rgba(0,15,30,.09)} }
+.dl-chips a.dl-shine:active{transform:scale(.95)}
+.dl-chips a.dl-shine:focus-visible{outline:2px solid rgba(0,22,43,.55);outline-offset:2px}
 
 /* ---------- comparison ---------- */
 .compare{padding:clamp(110px,15vh,180px) 0}
@@ -672,30 +771,31 @@ h1,h2,h3{font-weight:700;letter-spacing:-0.025em;line-height:1.04;text-wrap:bala
   font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
   color:var(--bg);background:var(--chalk);border-radius:999px;padding:4px 9px;font-weight:500;
 }
-/* ---------- footer (Figma 78:27032) ---------- */
-.footer{
-  position:relative;min-height:100svh;background:var(--bg);
-  display:grid;place-items:center;padding:clamp(24px,2.6vw,40px);
+/* ---------- footer: "Let's create future together" (Figma 867:51447) ---------- */
+.footer{position:relative;height:100svh;min-height:560px;background:var(--bg);overflow:hidden}
+.footer-canvas{
+  position:absolute;left:50%;top:50%;width:1440px;height:800px;
+  transform:translate(-50%,-50%) scale(var(--hs));
 }
 .footer-card{
-  position:relative;overflow:hidden;
-  width:100%;max-width:2480px;height:calc(100svh - clamp(48px,5.2vw,80px));max-height:960px;
-  border-radius:24px;
+  position:absolute;left:40px;top:89px;width:1360px;height:711px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:40px;
   background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.1);
-  -webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);
+  border:1px solid rgba(255,255,255,.1);border-bottom:none;
+  border-radius:40px 40px 0 0;
 }
-.footer-logo{
-  position:absolute;left:clamp(32px,3.6vw,72px);bottom:clamp(48px,7vh,84px);
-  width:clamp(240px,22vw,340px);display:block;
-}
-.footer-logo svg{width:100%;height:auto;color:var(--ink)}
-.footer-contact{
-  position:absolute;right:clamp(32px,3.6vw,72px);bottom:clamp(48px,6.5vh,72px);
-  max-width:340px;text-align:right;
+.fc-head{font-family:var(--font-bull);font-weight:500;font-size:80px;line-height:92.5px;color:#aaa}
+.fc-line{font-weight:500}
+.fc-word{font-family:'Averia Serif Libre',Georgia,serif;font-weight:700;color:#fff}
+.fc-word .fc-ch{display:inline-block;will-change:transform}
+.fc-bottom{display:flex;align-items:flex-end;justify-content:space-between;width:1280px}
+.fc-copy{font-family:var(--font-bull);font-weight:400;font-size:14px;line-height:1.5;color:#aaa}
+.fc-contact{
   font-family:var(--font-bull);font-weight:500;
-  font-size:clamp(15px,1.3vw,18px);line-height:1.4;color:rgba(255,255,255,.6);
+  font-size:20px;line-height:28px;color:rgba(255,255,255,.6);text-align:right;
 }
+.fc-contact a{font-weight:400;font-size:16px}
 .footer-mail{
   color:rgba(255,255,255,.6);white-space:nowrap;
   border-bottom:1px solid rgba(255,255,255,.4);padding-bottom:1px;
@@ -739,13 +839,15 @@ h1,h2,h3{font-weight:700;letter-spacing:-0.025em;line-height:1.04;text-wrap:bala
 .reduced .partner-copy{gap:64px}
 .reduced .partner-block{grid-area:auto;opacity:1;transform:none}
 .reduced .partner-dots{display:none}
+.reduced .delivery{height:auto}
+.reduced .delivery-sticky{position:static;height:auto;padding:96px 0}
 .reduced .focal{height:auto}
 .reduced .focal-sticky{position:static;height:auto;padding:96px 0}
 .reduced .fo-blur,.reduced .fo-dark{opacity:1}
 .reduced #fo-note{opacity:1!important}
 
 /* reduced-motion: canvases flow in document order instead of absolute centering */
-.reduced .hero-canvas,.reduced .uba-canvas,.reduced .focal-canvas,
+.reduced .hero-canvas,.reduced .uba-canvas,.reduced .focal-canvas,.reduced .delivery-canvas,
 .reduced .tvwall-canvas,.reduced .truth-canvas{
   position:relative;left:auto;top:auto;transform:scale(var(--hs));transform-origin:top center;margin:0 auto;
 }

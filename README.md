@@ -32,8 +32,8 @@ assets/files/              UBA-Red-Bull-Streaming-Platform.psd (download target)
 
 - **Design canvas** — pinned sections lay out on a fixed 1440×800 canvas scaled to the viewport with `transform: scale(var(--hs))`. `--hs` (set in `js/main.js`) is a *contain* fit: `min(min(viewportWidth, 2560)/1440, viewportHeight/800)`, so every stage keeps its built-in breathing room and never overflows. 2560px is the max design width.
 - **Pinned sections** share one skeleton: a tall wrapper (defines scroll length) then a `position: sticky` stage then the canvas. Scroll progress scrubs a GSAP timeline.
-- **Brand switching** — the segmented control in the rule-of-thumb section toggles every `[data-brand]` image (`rbtv` / `stv` / `rally`): stage photo, TV, laptop, tablet, phone. The Examples gallery stays on the Red Bull TV set intentionally.
-- **Examples crop tabs** — the 16:9 / 3:2 / 2:3 / 1:1 control sets which crop the hover preview reveals; hovering a card dims the frame and keeps the selected crop sharp.
+- **Brand switching** — the segmented control in the rule-of-thumb section toggles every `[data-brand]` image (`rbtv` / `stv` / `rally`): stage photo, TV, laptop, tablet, phone, and the Examples gallery follows the selected brand.
+- **Examples crop tabs** — the 16:9 / 7:2 / 2:3 / 1:1 control sets which crop the hover preview reveals; hovering a card dims the frame and keeps the selected crop sharp. Windows are centered except the 7:2 banner, which anchors on each card's focal point (`data-focal-x/y`).
 - **Scribbles** are stroke-only SVG paths drawn via dash-offset, roughened with SVG turbulence; a global ticker "boils" the turbulence for a hand-drawn feel.
 - **Section hand-offs** — each section's exit is a scrubbed tween with explicit rest values so reverse scrolling always restores it.
 - **Overflow** — all sections live inside `.page { overflow-x: clip }`; the mobile gate sits outside it so it stays viewport-true.
@@ -42,7 +42,7 @@ assets/files/              UBA-Red-Bull-Streaming-Platform.psd (download target)
 
 ## Swapping content
 
-- Replace any file in `assets/img/` keeping the filename — no code changes needed.
+- Drop a high-res master named after the image slot into `assets/src/` (git-ignored) and run `node tools/build-images.mjs`: it generates responsive WebP variants in `assets/img/` and rewrites the matching `<img>` tags (srcset/sizes/lazy) automatically.
 - Section copy lives in plain markup in `index.html`.
 - The three "Download UBA PSD" buttons (nav, mobile gate, Base Asset section) link to `assets/files/UBA-Red-Bull-Streaming-Platform.psd`. Replace that file (or repoint the `href`) to update the download.
 - Hidden sections (partners / approach / comparison / delivery) remain in the file, disabled by one CSS rule; re-enable by removing them from the `display:none` list in `css/styles.css`.
