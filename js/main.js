@@ -337,44 +337,57 @@
     /* photo is fully gone before the surface melts — no cutout seams */
     .fromTo(['.hero-canvas', '.hero-sticky', '.hero-fig'], { backgroundColor: '#ffffff' }, { backgroundColor: '#000f1e', duration: .55, immediateRender: false }, .42);
 
-  /* ---------- orbit hero: elliptical solar system, spiral blue-hole exit ----------
-     Tile library: every slot below is a placeholder until it gets a src, e.g.
-       { p: .08, w: 112, h: 74, src: 'assets/img/orbit/dive.webp' }
-     `p` is the tile's phase around its ellipse (0..1), w/h its pixel size in
-     stage units (any ratio). Drop images into assets/img/orbit/ and add src
-     per slot; orbits, tilt, depth, entrance and the spiral exit are automatic. */
+  /* ---------- orbit hero: rigid rotating field (cosmos.so mechanics) ----------
+     How cosmos actually works, measured from the live site: the tile scatter
+     is a DESIGNED composition that rotates as one rigid body (~2deg/s), so
+     tiles never move relative to each other and the layout never degrades.
+     Tiles stay upright, all full-opacity; a large white veil washes out the
+     center under the copy. The field extends past the frame so rotation
+     keeps feeding tiles through the visible window.
+
+     Tile positions are transcribed 1:1 from Figma 885:53201 (offsets from
+     the 1440x800 frame center). Add src to any slot to drop an image in:
+       { x: -329, y: 0, w: 65, h: 92, src: 'assets/img/orbit/dive.webp' } */
   if (heroMode === 'orbit' && document.querySelector('.hero-orbit')){
-    /* Tile field transcribed 1:1 from Figma 885:53201. Every tile rides its
-       OWN ellipse (shared aspect 1.8, matching the frame), so the radii form
-       one continuous band rather than discrete rings. `ry` is that ellipse's
-       minor radius, `a` the tile's angle on it, both taken from the comp.
-       Add `src: 'assets/img/orbit/<file>'` to any slot to drop an image in. */
-    var HO_ASPECT = 1.8;
-    var HO_TILES_CFG = [
-      { ry:  183, a: 180.1, w:  65, h:  92 },
-      { ry:  199, a: 224.8, w:  80, h:  79 },
-      { ry:  231, a: 124.5, w:  71, h:  69 },
-      { ry:  233, a: 322.6, w:  79, h:  75 },
-      { ry:  240, a:  11.2, w:  70, h:  52 },
-      { ry:  254, a: 175.3, w:  74, h:  75 },
-      { ry:  268, a:  73.7, w:  97, h:  92 },
-      { ry:  274, a: 260.3, w:  62, h:  71 },
-      { ry:  275, a: 287.1, w:  67, h:  78 },
-      { ry:  297, a: 201.6, w: 110, h: 101 },
-      { ry:  304, a: 101.5, w:  51, h:  66 },
-      { ry:  324, a: 136.6, w:  92, h:  85 },
-      { ry:  356, a:  50.6, w:  77, h:  66 },
-      { ry:  358, a: 335.6, w: 101, h:  92 },
-      { ry:  360, a:   9.0, w:  84, h:  67 },
-      { ry:  375, a: 236.7, w: 104, h: 107 },
-      { ry:  406, a: 197.2, w: 110, h: 101 },
-      { ry:  407, a: 307.8, w:  95, h:  96 },
-      { ry:  420, a: 116.3, w:  69, h:  71 },
-      { ry:  437, a: 138.8, w: 108, h:  93 },
-      { ry:  455, a:  39.3, w:  97, h:  86 },
-      { ry:  474, a: 335.1, w: 106, h: 103 },
-      { ry:  587, a:  39.5, w: 106, h: 104 },
+    var HO_FIELD = [
+      { x:  -329, y:     0, w:  65, h:  92 },
+      { x:  -255, y:  -140, w:  80, h:  79 },
+      { x:  -497, y:  -109, w: 110, h: 101 },
+      { x:  -698, y:  -120, w: 110, h: 101 },
+      { x:  -371, y:  -314, w: 104, h: 107 },
+      { x:   -83, y:  -270, w:  62, h:  71 },
+      { x:   146, y:  -263, w:  67, h:  78 },
+      { x:   449, y:  -322, w:  95, h:  96 },
+      { x:   334, y:  -142, w:  79, h:  75 },
+      { x:   423, y:    47, w:  70, h:  52 },
+      { x:   587, y:  -148, w: 101, h:  92 },
+      { x:   640, y:    57, w:  84, h:  67 },
+      { x:   634, y:   288, w:  97, h:  86 },
+      { x:   775, y:  -200, w: 106, h: 103 },
+      { x:   406, y:   275, w:  77, h:  66 },
+      { x:  -235, y:   190, w:  71, h:  69 },
+      { x:  -335, y:   377, w:  69, h:  71 },
+      { x:  -423, y:   222, w:  92, h:  85 },
+      { x:  -591, y:   288, w: 108, h:  93 },
+      { x:  -457, y:    21, w:  74, h:  75 },
+      { x:  -109, y:   298, w:  51, h:  66 },
+      { x:   136, y:   257, w:  97, h:  92 },
+      { x:   816, y:   374, w: 106, h: 104 },
+      /* fill band: outside the frame, rotation carries these in */
+      { x:   792, y:   111, w:  96, h:  64 },
+      { x:   665, y:   665, w:  70, h:  70 },
+      { x:   345, y:  1002, w:  58, h:  86 },
+      { x:  -247, y:   761, w: 104, h:  72 },
+      { x:  -653, y:   676, w:  80, h:  80 },
+      { x:  -996, y:   363, w:  62, h:  90 },
+      { x:  -765, y:  -234, w: 110, h:  74 },
+      { x:  -687, y:  -641, w:  66, h:  66 },
+      { x:  -380, y:  -990, w:  56, h:  84 },
+      { x:   221, y:  -769, w:  92, h:  62 },
+      { x:   629, y:  -699, w:  74, h:  74 },
+      { x:   983, y:  -397, w:  60, h:  88 },
     ];
+    var HO_OMEGA = (Math.PI * 2) / 170;   /* one revolution ~ 170s, clockwise */
 
     var hoRingsEl = document.getElementById('ho-rings');
     var HO_RATIOS = [['16:9', 16/9], ['3:2', 3/2], ['4:3', 4/3], ['1:1', 1], ['4:5', 4/5], ['2:3', 2/3], ['9:16', 9/16]];
@@ -384,9 +397,8 @@
       return best[0];
     }
 
-    /* build one element per tile; the ticker owns x/y/scale/opacity/z */
     var hoTiles = [];
-    HO_TILES_CFG.forEach(function(t, i){
+    HO_FIELD.forEach(function(t, i){
       var el = document.createElement('div');
       el.className = 'ho-tile';
       el.style.width = t.w + 'px';
@@ -406,55 +418,53 @@
       hoRingsEl.appendChild(el);
       hoTiles.push({
         el: el,
-        rx: t.ry * HO_ASPECT,
-        ry: t.ry,
+        r: Math.hypot(t.x, t.y),
+        a0: Math.atan2(t.y, t.x),
         baseTilt: ((i * 37) % 25) - 12,
-        phase: t.a * Math.PI / 180,
-        /* gentle Keplerian differential: the field drifts and evolves without
-           shearing apart, so the comp keeps reading the way it was designed */
-        speed: (Math.PI * 2) / (150 * Math.pow(t.ry / 324, 0.25)),
-        arriveDelay: (i % 7) * .1 + (t.ry / 587) * .35
+        arriveDelay: (i % 7) * .09 + (Math.hypot(t.x, t.y) / 1100) * .4
       });
     });
 
-    /* scroll progress for the spiral dive (lerped in the ticker for butter) */
-    var hoTarget = 0, hoP = 0;
+    /* scroll progress for the spiral dive + a whisper of pointer parallax */
+    var hoTarget = 0, hoP = 0, hoMx = 0, hoMy = 0, hoTx = 0, hoTy = 0;
     ScrollTrigger.create({
       trigger: '.hero-orbit', start: 'top top', end: 'bottom bottom',
       onUpdate: function(self){ hoTarget = self.progress; }
     });
+    window.addEventListener('mousemove', function(e){
+      hoTx = (e.clientX / window.innerWidth - .5) * -24;
+      hoTy = (e.clientY / window.innerHeight - .5) * -18;
+    }, { passive: true });
 
     var hoStart = null;
     function hoFrame(time){
       if (hoStart === null) hoStart = time;
       var t = time - hoStart;
       hoP += (hoTarget - hoP) * .14;
+      hoMx += (hoTx - hoMx) * .06;
+      hoMy += (hoTy - hoMy) * .06;
       var p = hoP;
-      var pull = 1 - Math.pow(p, 1.15) * .92;      /* orbits collapse toward the center */
-      var extraSpin = p * p * 3.2;                  /* angular acceleration into the hole */
-      var fade = Math.max(0, 1 - p * 1.5);          /* everything is gone by ~2/3 depth */
+      var theta = t * HO_OMEGA + p * p * 3.2;       /* rigid spin + dive acceleration */
+      var pull = 1 - Math.pow(p, 1.15) * .92;       /* the field collapses inward */
+      var fade = Math.max(0, 1 - p * 1.5);
       for (var i = 0; i < hoTiles.length; i++){
         var d = hoTiles[i];
         var age = Math.min(Math.max((t - d.arriveDelay) / .9, 0), 1);
         var arrive = 1 - Math.pow(1 - age, 3);
-        var ang = d.phase + t * d.speed + extraSpin;
-        var x = Math.cos(ang) * d.rx * pull;
-        var y = Math.sin(ang) * d.ry * pull;
-        var depth = (Math.sin(ang) + 1) / 2;        /* 0 = far side, 1 = near side */
+        var ang = d.a0 + theta;
         gsap.set(d.el, {
-          x: x, y: y,
-          /* depth reads through size and layering; opacity stays near solid so
-             the tiles look like real cards, not ghosts */
-          scale: (0.9 + 0.18 * depth) * (0.55 + 0.45 * arrive) * (1 - p * .45),
-          opacity: (0.86 + 0.14 * depth) * arrive * fade,
-          rotation: d.baseTilt + p * p * 150,       /* base tilt, then twist as they fall in */
-          zIndex: Math.round(depth * 100)
+          x: Math.cos(ang) * d.r * pull + hoMx,
+          y: Math.sin(ang) * d.r * pull + hoMy,
+          scale: (0.85 + 0.15 * arrive) * (1 - p * .45),
+          opacity: arrive * fade,
+          rotation: d.baseTilt + p * p * 150,
+          zIndex: 1
         });
       }
     }
     gsap.ticker.add(function(time){ hoFrame(time); });
 
-    /* entrance: the system arrives first, then the copy surfaces from the glow */
+    /* entrance: the field arrives first, then the copy surfaces from the glow */
     gsap.set('.ho-copy > *', { y: 26, opacity: 0 });
     gsap.timeline({ delay: 1.35 })
       .to('.ho-glow', { opacity: 1, duration: 1.3, ease: 'power2.out' })

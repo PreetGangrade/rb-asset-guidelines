@@ -257,9 +257,10 @@ html.hero-orbit-mode .hero-orbit{display:block}
 .ho-tile span{font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;color:rgba(0,22,43,.30)}
 .ho-tile img{width:100%;height:100%;object-fit:cover}
 .ho-glow{
-  position:absolute;left:50%;top:50%;width:1240px;height:940px;
+  position:absolute;left:50%;top:50%;width:1560px;height:1180px;
   transform:translate(-50%,-50%);pointer-events:none;opacity:0;
-  background:radial-gradient(48% 48% at 50% 50%, #fff 34%, rgba(255,255,255,.9) 56%, transparent 76%);
+  /* cosmos-strength veil: the center third washes out under the copy */
+  background:radial-gradient(48% 48% at 50% 50%, #fff 30%, rgba(255,255,255,.92) 52%, transparent 78%);
 }
 .ho-copy{
   position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
