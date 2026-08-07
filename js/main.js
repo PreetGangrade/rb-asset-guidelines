@@ -344,36 +344,36 @@
      stage units (any ratio). Drop images into assets/img/orbit/ and add src
      per slot; orbits, tilt, depth, entrance and the spiral exit are automatic. */
   if (heroMode === 'orbit' && document.querySelector('.hero-orbit')){
-    /* Composition rule: sparse. Roughly 20% tile coverage, generous air
-       between neighbours, a wide clear center for the copy. Fewer, smaller
-       tiles read as a calm constellation; more/larger reads as clutter. */
-    /* Composition rule: sparse. ~11% tile coverage on canvas with roughly
-       two tile-widths of air between neighbours, and a wide clear center for
-       the copy. Fewer, smaller tiles read as a calm constellation; more or
-       larger reads as clutter. Outer tiles run past the frame on purpose, so
-       the system feels like it continues beyond the viewport. */
-    var HO_RINGS = [
-      { rx: 520, ry: 235, tilt: -4, period: 95, tiles: [
-        { p: .00, w: 90, h: 60 }, { p: .10, w: 62, h: 62 }, { p: .20, w: 56, h: 84 },
-        { p: .30, w: 84, h: 56 }, { p: .40, w: 68, h: 68 }, { p: .50, w: 52, h: 78 },
-        { p: .60, w: 96, h: 64 }, { p: .70, w: 58, h: 58 }, { p: .80, w: 60, h: 88 },
-        { p: .90, w: 86, h: 58 }
-      ]},
-      { rx: 790, ry: 355, tilt: -4, period: 135, tiles: [
-        { p: .038, w: 94, h: 62 }, { p: .115, w: 66, h: 66 }, { p: .192, w: 58, h: 86 },
-        { p: .269, w: 88, h: 58 }, { p: .346, w: 62, h: 62 }, { p: .423, w: 54, h: 82 },
-        { p: .500, w: 92, h: 62 }, { p: .577, w: 70, h: 70 }, { p: .654, w: 56, h: 84 },
-        { p: .731, w: 86, h: 58 }, { p: .808, w: 64, h: 64 }, { p: .885, w: 58, h: 86 },
-        { p: .962, w: 90, h: 60 }
-      ]},
-      { rx: 1050, ry: 470, tilt: -4, period: 180, tiles: [
-        { p: .029, w: 98, h: 66 }, { p: .088, w: 70, h: 70 }, { p: .147, w: 60, h: 88 },
-        { p: .206, w: 90, h: 60 }, { p: .265, w: 64, h: 64 }, { p: .324, w: 56, h: 84 },
-        { p: .382, w: 96, h: 64 }, { p: .441, w: 72, h: 72 }, { p: .500, w: 58, h: 86 },
-        { p: .559, w: 92, h: 62 }, { p: .618, w: 66, h: 66 }, { p: .677, w: 60, h: 90 },
-        { p: .735, w: 94, h: 62 }, { p: .794, w: 68, h: 68 }, { p: .853, w: 56, h: 82 },
-        { p: .912, w: 88, h: 58 }, { p: .971, w: 64, h: 64 }
-      ]}
+    /* Tile field transcribed 1:1 from Figma 885:53201. Every tile rides its
+       OWN ellipse (shared aspect 1.8, matching the frame), so the radii form
+       one continuous band rather than discrete rings. `ry` is that ellipse's
+       minor radius, `a` the tile's angle on it, both taken from the comp.
+       Add `src: 'assets/img/orbit/<file>'` to any slot to drop an image in. */
+    var HO_ASPECT = 1.8;
+    var HO_TILES_CFG = [
+      { ry:  183, a: 180.1, w:  65, h:  92 },
+      { ry:  199, a: 224.8, w:  80, h:  79 },
+      { ry:  231, a: 124.5, w:  71, h:  69 },
+      { ry:  233, a: 322.6, w:  79, h:  75 },
+      { ry:  240, a:  11.2, w:  70, h:  52 },
+      { ry:  254, a: 175.3, w:  74, h:  75 },
+      { ry:  268, a:  73.7, w:  97, h:  92 },
+      { ry:  274, a: 260.3, w:  62, h:  71 },
+      { ry:  275, a: 287.1, w:  67, h:  78 },
+      { ry:  297, a: 201.6, w: 110, h: 101 },
+      { ry:  304, a: 101.5, w:  51, h:  66 },
+      { ry:  324, a: 136.6, w:  92, h:  85 },
+      { ry:  356, a:  50.6, w:  77, h:  66 },
+      { ry:  358, a: 335.6, w: 101, h:  92 },
+      { ry:  360, a:   9.0, w:  84, h:  67 },
+      { ry:  375, a: 236.7, w: 104, h: 107 },
+      { ry:  406, a: 197.2, w: 110, h: 101 },
+      { ry:  407, a: 307.8, w:  95, h:  96 },
+      { ry:  420, a: 116.3, w:  69, h:  71 },
+      { ry:  437, a: 138.8, w: 108, h:  93 },
+      { ry:  455, a:  39.3, w:  97, h:  86 },
+      { ry:  474, a: 335.1, w: 106, h: 103 },
+      { ry:  587, a:  39.5, w: 106, h: 104 },
     ];
 
     var hoRingsEl = document.getElementById('ho-rings');
@@ -385,41 +385,35 @@
     }
 
     /* build one element per tile; the ticker owns x/y/scale/opacity/z */
-    var hoTiles = [], hoN = 0;
-    HO_RINGS.forEach(function(ring, ri){
-      var tiltRad = ring.tilt * Math.PI / 180;
-      ring.tiles.forEach(function(t, ti){
-        hoN++;
-        var el = document.createElement('div');
-        el.className = 'ho-tile';
-        el.style.width = t.w + 'px';
-        el.style.height = t.h + 'px';
-        el.style.left = (-t.w / 2) + 'px';
-        el.style.top = (-t.h / 2) + 'px';
-        if (t.src){
-          var im = document.createElement('img');
-          im.src = t.src;
-          im.alt = '';
-          el.appendChild(im);
-        } else {
-          var label = document.createElement('span');
-          label.textContent = hoRatioLabel(t.w, t.h);
-          el.appendChild(label);
-        }
-        hoRingsEl.appendChild(el);
-        hoTiles.push({
-          el: el,
-          /* tiles share their ring's exact ellipse: the oval paths must stay
-             readable. Only rotation is jittered; jittering the radii gives
-             every tile its own orbit and the structure dissolves. */
-          rx: ring.rx,
-          ry: ring.ry,
-          baseTilt: ((hoN * 37) % 19) - 9,
-          cosT: Math.cos(tiltRad), sinT: Math.sin(tiltRad),
-          phase: t.p * Math.PI * 2,
-          speed: (Math.PI * 2) / ring.period,
-          arriveDelay: .1 * ri + (ti % 6) * .11
-        });
+    var hoTiles = [];
+    HO_TILES_CFG.forEach(function(t, i){
+      var el = document.createElement('div');
+      el.className = 'ho-tile';
+      el.style.width = t.w + 'px';
+      el.style.height = t.h + 'px';
+      el.style.left = (-t.w / 2) + 'px';
+      el.style.top = (-t.h / 2) + 'px';
+      if (t.src){
+        var im = document.createElement('img');
+        im.src = t.src;
+        im.alt = '';
+        el.appendChild(im);
+      } else {
+        var label = document.createElement('span');
+        label.textContent = hoRatioLabel(t.w, t.h);
+        el.appendChild(label);
+      }
+      hoRingsEl.appendChild(el);
+      hoTiles.push({
+        el: el,
+        rx: t.ry * HO_ASPECT,
+        ry: t.ry,
+        baseTilt: ((i * 37) % 25) - 12,
+        phase: t.a * Math.PI / 180,
+        /* gentle Keplerian differential: the field drifts and evolves without
+           shearing apart, so the comp keeps reading the way it was designed */
+        speed: (Math.PI * 2) / (150 * Math.pow(t.ry / 324, 0.25)),
+        arriveDelay: (i % 7) * .1 + (t.ry / 587) * .35
       });
     });
 
@@ -444,10 +438,8 @@
         var age = Math.min(Math.max((t - d.arriveDelay) / .9, 0), 1);
         var arrive = 1 - Math.pow(1 - age, 3);
         var ang = d.phase + t * d.speed + extraSpin;
-        var ex = Math.cos(ang) * d.rx * pull;
-        var ey = Math.sin(ang) * d.ry * pull;
-        var x = ex * d.cosT - ey * d.sinT;
-        var y = ex * d.sinT + ey * d.cosT;
+        var x = Math.cos(ang) * d.rx * pull;
+        var y = Math.sin(ang) * d.ry * pull;
         var depth = (Math.sin(ang) + 1) / 2;        /* 0 = far side, 1 = near side */
         gsap.set(d.el, {
           x: x, y: y,
