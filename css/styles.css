@@ -179,6 +179,11 @@ h1,h2,h3{font-weight:700;letter-spacing:-0.025em;line-height:1.04;text-wrap:bala
 @media (hover:hover) and (pointer:fine){
   .fg-nav--float .fg-pill:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.16)}
 }
+/* compact tiers: the stage scales with the viewport, so the nav must too,
+   or it eats proportionally more of small screens and overlaps titles */
+@media (max-width:1300px), (max-height:760px){ .fg-nav--float{zoom:.84} }
+@media (max-width:1120px), (max-height:660px){ .fg-nav--float{zoom:.72} }
+@media (max-height:560px){ .fg-nav--float{zoom:.62} }
 .fg-nav--float .fg-pill-cta{background:#f8f8f8;color:#00162b}
 .fg-nav--float .fg-pill-cta:focus-visible{outline:2px solid rgba(248,248,248,.6)}
 @media (hover:hover) and (pointer:fine){
@@ -474,7 +479,7 @@ h1,h2,h3{font-weight:700;letter-spacing:-0.025em;line-height:1.04;text-wrap:bala
   position:absolute;left:50%;top:50%;width:1440px;height:800px;
   transform:translate(-50%,-50%) scale(var(--hs));
 }
-.fo-heads{position:absolute;left:50%;transform:translateX(-50%);top:48px;width:918px;height:79px;display:grid}
+.fo-heads{position:absolute;left:50%;transform:translateX(-50%);top:64px;width:918px;height:79px;display:grid}
 .fo-head{
   grid-area:1/1;opacity:0;
   font-family:var(--font-bull);font-weight:700;
