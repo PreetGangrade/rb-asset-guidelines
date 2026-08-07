@@ -245,6 +245,7 @@ html.hero-orbit-mode .hero-orbit{display:block}
 .ho-ring,.ho-pos{position:absolute;left:0;top:0;width:0;height:0}
 .ho-tile{
   position:absolute;display:flex;align-items:center;justify-content:center;overflow:hidden;
+  opacity:0; /* the ticker owns visibility; prevents a corner flash pre-first-frame */
   background:rgba(0,15,30,.04);
   border:1px solid rgba(0,15,30,.08);
   border-radius:12px;
