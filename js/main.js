@@ -42,6 +42,21 @@
   setHeroScale();
   window.addEventListener('resize', setHeroScale);
 
+  /* hero variant toggle: 'classic' (default) or 'orbit', persisted per browser */
+  var heroMode = 'classic';
+  try { if (localStorage.getItem('rbHero') === 'orbit') heroMode = 'orbit'; } catch(e){}
+  if (heroMode === 'orbit') document.documentElement.classList.add('hero-orbit-mode');
+  document.querySelectorAll('.hero-toggle-pill').forEach(function(b){
+    b.textContent = 'Hero: ' + (heroMode === 'orbit' ? 'Orbit' : 'Classic');
+    b.setAttribute('aria-pressed', heroMode === 'orbit' ? 'true' : 'false');
+  });
+  document.addEventListener('click', function(e){
+    var b = e.target.closest ? e.target.closest('.hero-toggle-pill') : null;
+    if (!b) return;
+    try { localStorage.setItem('rbHero', heroMode === 'orbit' ? 'classic' : 'orbit'); } catch(err){}
+    location.reload();
+  });
+
   if (reduced || typeof gsap === 'undefined'){
     /* static fallback: stack pinned sections, show everything drawn */
     document.documentElement.classList.add('reduced');
@@ -105,7 +120,8 @@
     return el.querySelectorAll('.winner');
   }
 
-  /* ---------- hero (fig): intro + frame 1-2-3 scroll ---------- */
+  /* ---------- hero (fig): intro + frame 1-2-3 scroll (classic mode only) ---------- */
+  if (heroMode === 'classic'){
   gsap.set('.fg-copy > *', { y: 24, opacity: 0 });
   gsap.set('.fg-monitor', { y: 110, opacity: 0 });
   gsap.timeline({ delay: .12 })
@@ -130,6 +146,7 @@
         .fromTo(hstates[i], { opacity: 0 }, { opacity: 1, duration: .5 }, 'h' + i + '+=0.12')
         .to({}, { duration: 1 }); /* hold */
     });
+  }
   }
 
   /* ---------- footer: springy arrival + morphing word ---------- */
@@ -310,7 +327,7 @@
   }
 
   /* ---------- section hand-offs: each pinned section eases away ---------- */
-  gsap.timeline({
+  if (heroMode === 'classic') gsap.timeline({
     scrollTrigger: { trigger: '.hero-fig', start: 'bottom 96%', end: 'bottom 50%', scrub: true },
     defaults: { ease: 'none' }
   })
@@ -319,6 +336,100 @@
     .fromTo('.fg-monitor', { y: 0, opacity: 1 }, { y: -30, opacity: 0, duration: .38, immediateRender: false }, 0)
     /* photo is fully gone before the surface melts — no cutout seams */
     .fromTo(['.hero-canvas', '.hero-sticky', '.hero-fig'], { backgroundColor: '#ffffff' }, { backgroundColor: '#000f1e', duration: .55, immediateRender: false }, .42);
+
+  /* ---------- orbit hero: rings of tiles, glow copy reveal, scrub exit ----------
+     Tile library: each slot below is a placeholder until it gets a src, e.g.
+       { a: 10, w: 112, h: 74, src: 'assets/img/orbit/dive.webp' }
+     Drop images into assets/img/orbit/ (mixed ratios welcome) and add the
+     src per slot; everything else (orbit, entrance, exit) is automatic. */
+  if (heroMode === 'orbit' && document.querySelector('.hero-orbit')){
+    var HO_RINGS = [
+      { radius: 300, duration: 110, dir: 1, tiles: [
+        { a:  10, w: 112, h:  74 }, { a:  72, w:  74, h:  74 }, { a: 128, w:  68, h:  94 },
+        { a: 190, w: 104, h:  68 }, { a: 248, w:  78, h:  78 }, { a: 306, w:  66, h:  92 }
+      ]},
+      { radius: 490, duration: 150, dir: -1, tiles: [
+        { a:   0, w: 118, h:  78 }, { a:  46, w:  82, h:  82 }, { a:  92, w:  72, h: 102 },
+        { a: 138, w: 112, h:  72 }, { a: 184, w:  84, h:  84 }, { a: 226, w:  70, h:  98 },
+        { a: 272, w: 108, h:  70 }, { a: 318, w:  80, h:  80 }
+      ]},
+      { radius: 690, duration: 200, dir: 1, tiles: [
+        { a:  18, w: 126, h:  84 }, { a:  58, w:  88, h:  88 }, { a:  98, w:  76, h: 108 },
+        { a: 140, w: 118, h:  76 }, { a: 180, w:  90, h:  90 }, { a: 222, w:  74, h: 104 },
+        { a: 262, w: 122, h:  80 }, { a: 302, w:  86, h:  86 }, { a: 342, w:  76, h: 106 }
+      ]}
+    ];
+
+    var hoRings = document.getElementById('ho-rings');
+    /* label each placeholder with the nearest familiar ratio */
+    var HO_RATIOS = [['16:9', 16/9], ['3:2', 3/2], ['4:3', 4/3], ['1:1', 1], ['4:5', 4/5], ['2:3', 2/3], ['9:16', 9/16]];
+    function hoRatioLabel(w, h){
+      var r = w / h, best = HO_RATIOS[0];
+      HO_RATIOS.forEach(function(c){ if (Math.abs(c[1] - r) < Math.abs(best[1] - r)) best = c; });
+      return best[0];
+    }
+    HO_RINGS.forEach(function(ring){
+      var ringEl = document.createElement('div');
+      ringEl.className = 'ho-ring';
+      ring.tiles.forEach(function(t){
+        var pos = document.createElement('div');
+        pos.className = 'ho-pos';
+        pos.style.transform = 'rotate(' + t.a + 'deg) translateX(' + ring.radius + 'px)';
+        var tile = document.createElement('div');
+        tile.className = 'ho-tile';
+        tile.style.width = t.w + 'px';
+        tile.style.height = t.h + 'px';
+        tile.style.left = (-t.w / 2) + 'px';
+        tile.style.top = (-t.h / 2) + 'px';
+        if (t.src){
+          var im = document.createElement('img');
+          im.src = t.src;
+          im.alt = '';
+          tile.appendChild(im);
+        } else {
+          var label = document.createElement('span');
+          label.textContent = hoRatioLabel(t.w, t.h);
+          tile.appendChild(label);
+        }
+        pos.appendChild(tile);
+        ringEl.appendChild(pos);
+        /* counter-rotate so every tile stays upright while its ring spins */
+        gsap.fromTo(tile, { rotation: -t.a }, {
+          rotation: -t.a - 360 * ring.dir, duration: ring.duration, repeat: -1, ease: 'none'
+        });
+      });
+      hoRings.appendChild(ringEl);
+      gsap.to(ringEl, { rotation: 360 * ring.dir, duration: ring.duration, repeat: -1, ease: 'none' });
+    });
+
+    /* entrance: the system arrives first, then the copy surfaces from the glow */
+    gsap.set('.ho-copy > *', { y: 26, opacity: 0 });
+    gsap.from('.ho-rings', { scale: .88, opacity: 0, duration: 1.6, ease: 'power3.out' });
+    gsap.from('.ho-tile', {
+      scale: .55, opacity: 0, duration: 1.1, ease: 'power3.out',
+      stagger: { each: .045, from: 'random' }
+    });
+    gsap.timeline({ delay: 1.35 })
+      .to('.ho-glow', { opacity: 1, duration: 1.3, ease: 'power2.out' })
+      .to('.ho-copy > *', { y: 0, opacity: 1, duration: .95, ease: 'power4.out', stagger: .1 }, '-=0.9');
+
+    /* exit: the system spins up, drifts out and fades; the page melts to navy */
+    gsap.timeline({
+      scrollTrigger: { trigger: '.hero-orbit', start: 'top top', end: 'bottom bottom', scrub: .8 },
+      defaults: { ease: 'none' }
+    })
+      .fromTo('.ho-rings', { rotation: 0 }, { rotation: 34, duration: .6, immediateRender: false }, .05)
+      .fromTo('.ho-rings', { scale: 1, autoAlpha: 1 }, { scale: 1.14, autoAlpha: 0, duration: .5, immediateRender: false }, .1)
+      .to('.ho-copy', { y: -70, autoAlpha: 0, duration: .45 }, .28)
+      .to('.ho-glow', { autoAlpha: 0, duration: .4 }, .32)
+      .fromTo(['.ho-sticky', '.hero-orbit'], { backgroundColor: '#ffffff' }, { backgroundColor: '#000f1e', duration: .28, immediateRender: false }, .62);
+
+    /* nav hand-off, same pattern as the classic hero */
+    gsap.timeline({
+      scrollTrigger: { trigger: '.hero-orbit', start: 'bottom 96%', end: 'bottom 50%', scrub: true },
+      defaults: { ease: 'none' }
+    }).fromTo('.fg-nav:not(.fg-nav--float)', { y: 0, autoAlpha: 1 }, { y: -40, autoAlpha: 0, duration: .45, immediateRender: false }, 0);
+  }
 
   /* ---------- floating nav: reveal on scroll-up (headroom pattern) ----------
      The hero nav is owned by the hero exit scrub above; past the hero a dark
@@ -354,7 +465,7 @@
        it out between hero-bottom 96% -> 50% of the viewport, so the floating
        nav must be gone before hero-bottom climbs back past ~45% — otherwise
        the two bars overlap. */
-    var hero = document.querySelector('.hero-fig');
+    var hero = document.querySelector(heroMode === 'orbit' ? '.hero-orbit' : '.hero-fig');
     function inHeroZone(){
       if (!hero) return window.scrollY < window.innerHeight * .8;
       return hero.getBoundingClientRect().bottom > window.innerHeight * .45;

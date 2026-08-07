@@ -229,6 +229,43 @@ h1,h2,h3{font-weight:700;letter-spacing:-0.025em;line-height:1.04;text-wrap:bala
 .footer-logo svg{color:#EAF3FC}
 
 
+/* ---------- orbit hero (toggle variant, Cosmos-style) ---------- */
+.hero-orbit{position:relative;height:220vh;background:#fff;display:none}
+html.hero-orbit-mode .hero-fig{display:none}
+html.hero-orbit-mode .hero-orbit{display:block}
+.ho-sticky{
+  position:sticky;top:0;height:100svh;overflow:hidden;
+  display:grid;place-items:center;background:#fff;
+}
+.ho-canvas{
+  position:absolute;left:50%;top:50%;width:1440px;height:800px;
+  transform:translate(-50%,-50%) scale(var(--hs));
+}
+.ho-rings{position:absolute;left:50%;top:50%;width:0;height:0}
+.ho-ring,.ho-pos{position:absolute;left:0;top:0;width:0;height:0}
+.ho-tile{
+  position:absolute;display:flex;align-items:center;justify-content:center;overflow:hidden;
+  background:rgba(0,15,30,.04);
+  border:1px solid rgba(0,15,30,.08);
+  border-radius:12px;
+  box-shadow:0 14px 34px rgba(25,33,61,.10);
+}
+.ho-tile span{font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;color:rgba(0,15,30,.32)}
+.ho-tile img{width:100%;height:100%;object-fit:cover}
+.ho-glow{
+  position:absolute;left:50%;top:50%;width:1240px;height:940px;
+  transform:translate(-50%,-50%);pointer-events:none;opacity:0;
+  background:radial-gradient(48% 48% at 50% 50%, #fff 34%, rgba(255,255,255,.9) 56%, transparent 76%);
+}
+.ho-copy{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:760px;text-align:center;font-family:var(--font-bull);color:#00162b;z-index:2;
+}
+.ho-copy h1{font-family:var(--font-bull);font-size:54px;line-height:1.12;font-weight:700;letter-spacing:-.01em;color:#00162b}
+.ho-sub{margin:18px auto 28px;max-width:520px;font-size:17px;line-height:1.6;font-weight:400;color:rgba(0,22,43,.65)}
+.reduced .hero-orbit{height:auto}
+.reduced .ho-sticky{position:static;height:auto;padding:140px 0}
+
 /* ---------- truth flow (1:1 from Figma 15:3054) ---------- */
 .truth{position:relative;height:520vh;background:#000f1e}
 .truth-sticky{
