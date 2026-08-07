@@ -246,12 +246,14 @@ html.hero-orbit-mode .hero-orbit{display:block}
 .ho-tile{
   position:absolute;display:flex;align-items:center;justify-content:center;overflow:hidden;
   opacity:0; /* the ticker owns visibility; prevents a corner flash pre-first-frame */
-  background:rgba(0,15,30,.04);
-  border:1px solid rgba(0,15,30,.08);
-  border-radius:12px;
-  box-shadow:0 14px 34px rgba(25,33,61,.10);
+  /* placeholder slots read as real cards so the composition is judgeable
+     before the imagery lands; an <img> child covers this entirely */
+  background:linear-gradient(148deg,#e9edf2,#dbe2ea 52%,#cfd8e2);
+  border:1px solid rgba(0,15,30,.10);
+  border-radius:14px;
+  box-shadow:0 10px 26px rgba(25,33,61,.13), 0 2px 6px rgba(25,33,61,.08);
 }
-.ho-tile span{font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;color:rgba(0,15,30,.32)}
+.ho-tile span{font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;color:rgba(0,22,43,.42)}
 .ho-tile img{width:100%;height:100%;object-fit:cover}
 .ho-glow{
   position:absolute;left:50%;top:50%;width:1240px;height:940px;

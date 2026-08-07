@@ -340,32 +340,33 @@
   /* ---------- orbit hero: elliptical solar system, spiral blue-hole exit ----------
      Tile library: every slot below is a placeholder until it gets a src, e.g.
        { p: .08, w: 112, h: 74, src: 'assets/img/orbit/dive.webp' }
-     `p` is the tile's phase around its ellipse (0..1). Drop images into
-     assets/img/orbit/ and add src per slot; orbits, depth, entrance and the
-     spiral exit are all automatic. */
+     `p` is the tile's phase around its ellipse (0..1), w/h its pixel size in
+     stage units (any ratio). Drop images into assets/img/orbit/ and add src
+     per slot; orbits, tilt, depth, entrance and the spiral exit are automatic. */
   if (heroMode === 'orbit' && document.querySelector('.hero-orbit')){
-    /* three nested ellipses (solar-system ovals), all orbiting the copy */
     var HO_RINGS = [
-      { rx: 430, ry: 180, tilt: -4, period: 90, tiles: [
-        { p: .00, w: 108, h:  72 }, { p: .11, w:  72, h:  72 }, { p: .21, w:  64, h:  90 },
-        { p: .31, w:  98, h:  64 }, { p: .40, w:  74, h:  74 }, { p: .50, w:  62, h:  88 },
-        { p: .60, w: 102, h:  68 }, { p: .70, w:  70, h:  70 }, { p: .80, w:  64, h:  90 },
-        { p: .90, w:  96, h:  64 }
+      { rx: 500, ry: 215, tilt: -4, period: 95, tiles: [
+        { p: .00, w: 118, h:  78 }, { p: .085, w:  84, h:  84 }, { p: .17, w:  74, h: 104 },
+        { p: .25, w: 110, h:  72 }, { p: .335, w:  80, h:  80 }, { p: .42, w:  70, h:  98 },
+        { p: .50, w: 114, h:  76 }, { p: .585, w:  86, h:  86 }, { p: .67, w:  72, h: 100 },
+        { p: .75, w: 106, h:  70 }, { p: .835, w:  82, h:  82 }, { p: .92, w:  74, h: 102 }
       ]},
-      { rx: 660, ry: 280, tilt: -4, period: 130, tiles: [
-        { p: .04, w: 116, h:  76 }, { p: .12, w:  80, h:  80 }, { p: .20, w:  70, h: 100 },
-        { p: .28, w: 108, h:  70 }, { p: .35, w:  82, h:  82 }, { p: .43, w:  68, h:  96 },
-        { p: .51, w: 112, h:  74 }, { p: .58, w:  78, h:  78 }, { p: .66, w:  70, h:  98 },
-        { p: .74, w: 104, h:  68 }, { p: .82, w:  80, h:  80 }, { p: .89, w:  66, h:  94 },
-        { p: .96, w: 100, h:  66 }
+      { rx: 745, ry: 330, tilt: -4, period: 135, tiles: [
+        { p: .00, w: 126, h:  84 }, { p: .063, w:  90, h:  90 }, { p: .125, w:  78, h: 110 },
+        { p: .19, w: 118, h:  78 }, { p: .25, w:  88, h:  88 }, { p: .313, w:  74, h: 104 },
+        { p: .375, w: 122, h:  80 }, { p: .44, w:  92, h:  92 }, { p: .50, w:  80, h: 112 },
+        { p: .563, w: 114, h:  76 }, { p: .625, w:  86, h:  86 }, { p: .69, w:  76, h: 106 },
+        { p: .75, w: 124, h:  82 }, { p: .813, w:  90, h:  90 }, { p: .875, w:  78, h: 108 },
+        { p: .94, w: 116, h:  76 }
       ]},
-      { rx: 920, ry: 400, tilt: -4, period: 175, tiles: [
-        { p: .02, w: 124, h:  82 }, { p: .08, w:  88, h:  88 }, { p: .14, w:  76, h: 106 },
-        { p: .20, w: 116, h:  76 }, { p: .27, w:  90, h:  90 }, { p: .33, w:  74, h: 102 },
-        { p: .39, w: 120, h:  78 }, { p: .46, w:  86, h:  86 }, { p: .52, w:  76, h: 106 },
-        { p: .58, w: 112, h:  74 }, { p: .65, w:  88, h:  88 }, { p: .71, w:  72, h: 100 },
-        { p: .77, w: 118, h:  78 }, { p: .84, w:  84, h:  84 }, { p: .90, w:  74, h: 104 },
-        { p: .96, w: 110, h:  72 }
+      { rx: 1010, ry: 455, tilt: -4, period: 180, tiles: [
+        { p: .00, w: 134, h:  88 }, { p: .05, w:  96, h:  96 }, { p: .10, w:  84, h: 118 },
+        { p: .15, w: 126, h:  84 }, { p: .20, w:  94, h:  94 }, { p: .25, w:  80, h: 112 },
+        { p: .30, w: 130, h:  86 }, { p: .35, w:  98, h:  98 }, { p: .40, w:  86, h: 120 },
+        { p: .45, w: 122, h:  80 }, { p: .50, w:  92, h:  92 }, { p: .55, w:  82, h: 114 },
+        { p: .60, w: 132, h:  88 }, { p: .65, w:  96, h:  96 }, { p: .70, w:  84, h: 118 },
+        { p: .75, w: 124, h:  82 }, { p: .80, w:  94, h:  94 }, { p: .85, w:  80, h: 112 },
+        { p: .90, w: 128, h:  86 }, { p: .95, w:  90, h:  90 }
       ]}
     ];
 
@@ -378,10 +379,11 @@
     }
 
     /* build one element per tile; the ticker owns x/y/scale/opacity/z */
-    var hoTiles = [];
+    var hoTiles = [], hoN = 0;
     HO_RINGS.forEach(function(ring, ri){
       var tiltRad = ring.tilt * Math.PI / 180;
       ring.tiles.forEach(function(t, ti){
+        hoN++;
         var el = document.createElement('div');
         el.className = 'ho-tile';
         el.style.width = t.w + 'px';
@@ -401,11 +403,14 @@
         hoRingsEl.appendChild(el);
         hoTiles.push({
           el: el,
-          rx: ring.rx, ry: ring.ry,
+          /* deterministic per-tile jitter: organic scatter, not perfect rails */
+          rx: ring.rx * (0.94 + ((hoN * 53) % 13) / 100),
+          ry: ring.ry * (0.94 + ((hoN * 31) % 13) / 100),
+          baseTilt: ((hoN * 37) % 27) - 13,
           cosT: Math.cos(tiltRad), sinT: Math.sin(tiltRad),
           phase: t.p * Math.PI * 2,
           speed: (Math.PI * 2) / ring.period,
-          arriveDelay: .12 * ri + (ti % 5) * .14   /* scattered arrival, inner first */
+          arriveDelay: .1 * ri + (ti % 6) * .11
         });
       });
     });
@@ -438,9 +443,11 @@
         var depth = (Math.sin(ang) + 1) / 2;        /* 0 = far side, 1 = near side */
         gsap.set(d.el, {
           x: x, y: y,
-          scale: (0.62 + 0.5 * depth) * (0.4 + 0.6 * arrive) * (1 - p * .45),
-          opacity: (0.4 + 0.6 * depth) * arrive * fade,
-          rotation: p * p * 150,                    /* tiles twist as they fall in */
+          /* depth reads through size and layering; opacity stays near solid so
+             the tiles look like real cards, not ghosts */
+          scale: (0.9 + 0.18 * depth) * (0.55 + 0.45 * arrive) * (1 - p * .45),
+          opacity: (0.86 + 0.14 * depth) * arrive * fade,
+          rotation: d.baseTilt + p * p * 150,       /* base tilt, then twist as they fall in */
           zIndex: Math.round(depth * 100)
         });
       }
