@@ -409,9 +409,11 @@
         hoRingsEl.appendChild(el);
         hoTiles.push({
           el: el,
-          /* deterministic per-tile jitter: organic scatter, not perfect rails */
-          rx: ring.rx * (0.94 + ((hoN * 53) % 13) / 100),
-          ry: ring.ry * (0.94 + ((hoN * 31) % 13) / 100),
+          /* tiles share their ring's exact ellipse: the oval paths must stay
+             readable. Only rotation is jittered; jittering the radii gives
+             every tile its own orbit and the structure dissolves. */
+          rx: ring.rx,
+          ry: ring.ry,
           baseTilt: ((hoN * 37) % 19) - 9,
           cosT: Math.cos(tiltRad), sinT: Math.sin(tiltRad),
           phase: t.p * Math.PI * 2,
