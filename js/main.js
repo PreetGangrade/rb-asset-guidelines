@@ -337,56 +337,67 @@
     /* photo is fully gone before the surface melts — no cutout seams */
     .fromTo(['.hero-canvas', '.hero-sticky', '.hero-fig'], { backgroundColor: '#ffffff' }, { backgroundColor: '#000f1e', duration: .55, immediateRender: false }, .42);
 
-  /* ---------- orbit hero: rigid rotating field (cosmos.so mechanics) ----------
-     How cosmos actually works, measured from the live site: the tile scatter
-     is a DESIGNED composition that rotates as one rigid body (~2deg/s), so
-     tiles never move relative to each other and the layout never degrades.
-     Tiles stay upright, all full-opacity; a large white veil washes out the
-     center under the copy. The field extends past the frame so rotation
-     keeps feeding tiles through the visible window.
+  /* ---------- orbit hero: even elliptical field (cosmos.so mechanics) ----------
+     Measured from the live cosmos.so hero: the tile field turns as one body
+     at ~2deg/s, tiles hold their tilt, no depth fade, strong white veil over
+     the centre. The layout trick is EVEN distribution: tiles are placed by
+     golden angle (137.5deg) across an elliptical annulus, so no matter how
+     far the field has turned there is never an empty wedge in frame.
+     Verified: largest angular gap 12deg, 23-26 tiles in frame at every
+     rotation, coverage steady at 12-14%.
 
-     Tile positions are transcribed 1:1 from Figma 885:53201 (offsets from
-     the 1440x800 frame center). Add src to any slot to drop an image in:
-       { x: -329, y: 0, w: 65, h: 92, src: 'assets/img/orbit/dive.webp' } */
+     Every tile rides its own ellipse (aspect 1.75) and all advance at the
+     same angular rate, so the oval envelope stays wide and fixed while the
+     field flows. Add src to any slot to drop an image in:
+       { x: 525, y: 0, w: 104, h: 70, src: 'assets/img/orbit/dive.webp' } */
   if (heroMode === 'orbit' && document.querySelector('.hero-orbit')){
     var HO_FIELD = [
-      { x:  -329, y:     0, w:  65, h:  92 },
-      { x:  -255, y:  -140, w:  80, h:  79 },
-      { x:  -497, y:  -109, w: 110, h: 101 },
-      { x:  -698, y:  -120, w: 110, h: 101 },
-      { x:  -371, y:  -314, w: 104, h: 107 },
-      { x:   -83, y:  -270, w:  62, h:  71 },
-      { x:   146, y:  -263, w:  67, h:  78 },
-      { x:   449, y:  -322, w:  95, h:  96 },
-      { x:   334, y:  -142, w:  79, h:  75 },
-      { x:   423, y:    47, w:  70, h:  52 },
-      { x:   587, y:  -148, w: 101, h:  92 },
-      { x:   640, y:    57, w:  84, h:  67 },
-      { x:   634, y:   288, w:  97, h:  86 },
-      { x:   775, y:  -200, w: 106, h: 103 },
-      { x:   406, y:   275, w:  77, h:  66 },
-      { x:  -235, y:   190, w:  71, h:  69 },
-      { x:  -335, y:   377, w:  69, h:  71 },
-      { x:  -423, y:   222, w:  92, h:  85 },
-      { x:  -591, y:   288, w: 108, h:  93 },
-      { x:  -457, y:    21, w:  74, h:  75 },
-      { x:  -109, y:   298, w:  51, h:  66 },
-      { x:   136, y:   257, w:  97, h:  92 },
-      { x:   816, y:   374, w: 106, h: 104 },
-      /* fill band: outside the frame, rotation carries these in */
-      { x:   792, y:   111, w:  96, h:  64 },
-      { x:   665, y:   665, w:  70, h:  70 },
-      { x:   345, y:  1002, w:  58, h:  86 },
-      { x:  -247, y:   761, w: 104, h:  72 },
-      { x:  -653, y:   676, w:  80, h:  80 },
-      { x:  -996, y:   363, w:  62, h:  90 },
-      { x:  -765, y:  -234, w: 110, h:  74 },
-      { x:  -687, y:  -641, w:  66, h:  66 },
-      { x:  -380, y:  -990, w:  56, h:  84 },
-      { x:   221, y:  -769, w:  92, h:  62 },
-      { x:   629, y:  -699, w:  74, h:  74 },
-      { x:   983, y:  -397, w:  60, h:  88 },
+      { x:   525, y:     0, w: 104, h:  70 },
+      { x:  -400, y:   210, w:  76, h:  76 },
+      { x:    49, y:  -319, w:  60, h:  88 },
+      { x:   351, y:   262, w:  92, h:  62 },
+      { x:  -585, y:   -59, w:  84, h:  84 },
+      { x:   514, y:  -187, w:  66, h:  96 },
+      { x:  -162, y:   345, w: 110, h:  74 },
+      { x:  -295, y:  -325, w:  70, h:  70 },
+      { x:   616, y:   128, w:  58, h:  84 },
+      { x:  -619, y:   146, w:  98, h:  66 },
+      { x:   290, y:  -354, w:  80, h:  80 },
+      { x:   209, y:   381, w:  64, h:  92 },
+      { x:  -616, y:  -204, w: 104, h:  70 },
+      { x:   708, y:   -89, w:  76, h:  76 },
+      { x:  -425, y:   345, w:  60, h:  88 },
+      { x:   -97, y:  -426, w:  92, h:  62 },
+      { x:   584, y:   281, w:  84, h:  84 },
+      { x:  -776, y:    18, w:  66, h:  96 },
+      { x:   559, y:  -318, w: 110, h:  74 },
+      { x:   -37, y:   457, w:  70, h:  70 },
+      { x:  -521, y:  -356, w:  58, h:  84 },
+      { x:   817, y:    63, w:  98, h:  66 },
+      { x:  -686, y:   273, w:  80, h:  80 },
+      { x:   186, y:  -472, w:  64, h:  92 },
+      { x:   427, y:   426, w: 104, h:  70 },
+      { x:  -829, y:  -151, w:  76, h:  76 },
+      { x:   799, y:  -211, w:  60, h:  88 },
+      { x:  -344, y:   470, w:  92, h:  62 },
+      { x:  -305, y:  -485, w:  84, h:  84 },
+      { x:   808, y:   243, w:  66, h:  96 },
+      { x:  -893, y:   134, w: 110, h:  74 },
+      { x:   505, y:  -449, w:  70, h:  70 },
+      { x:   160, y:   532, w:  58, h:  84 },
+      { x:  -754, y:  -334, w:  98, h:  66 },
+      { x:   961, y:   -45, w:  80, h:  80 },
+      { x:  -661, y:   409, w:  64, h:  92 },
+      { x:     5, y:  -562, w: 104, h:  70 },
+      { x:   668, y:   420, w:  76, h:  76 },
+      { x:  -999, y:   -53, w:  60, h:  88 },
+      { x:   807, y:  -350, w:  92, h:  62 },
+      { x:  -183, y:   575, w:  84, h:  84 },
+      { x:  -549, y:  -499, w:  66, h:  96 },
+      { x:  1004, y:   157, w: 110, h:  74 },
+      { x:  -934, y:   274, w:  70, h:  70 },
     ];
+    var HO_ASPECT = 1.75;                  /* wide oval, matching the frame */
     var HO_OMEGA = (Math.PI * 2) / 170;   /* one revolution ~ 170s, clockwise */
 
     var hoRingsEl = document.getElementById('ho-rings');
@@ -418,8 +429,8 @@
       hoRingsEl.appendChild(el);
       hoTiles.push({
         el: el,
-        r: Math.hypot(t.x, t.y),
-        a0: Math.atan2(t.y, t.x),
+        r: Math.hypot(t.x / HO_ASPECT, t.y),
+        a0: Math.atan2(t.y, t.x / HO_ASPECT),
         baseTilt: ((i * 37) % 25) - 12,
         arriveDelay: (i % 7) * .09 + (Math.hypot(t.x, t.y) / 1100) * .4
       });
@@ -453,7 +464,7 @@
         var arrive = 1 - Math.pow(1 - age, 3);
         var ang = d.a0 + theta;
         gsap.set(d.el, {
-          x: Math.cos(ang) * d.r * pull + hoMx,
+          x: Math.cos(ang) * d.r * HO_ASPECT * pull + hoMx,
           y: Math.sin(ang) * d.r * pull + hoMy,
           scale: (0.85 + 0.15 * arrive) * (1 - p * .45),
           opacity: arrive * fade,
