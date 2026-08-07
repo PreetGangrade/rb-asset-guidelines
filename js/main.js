@@ -344,29 +344,35 @@
      stage units (any ratio). Drop images into assets/img/orbit/ and add src
      per slot; orbits, tilt, depth, entrance and the spiral exit are automatic. */
   if (heroMode === 'orbit' && document.querySelector('.hero-orbit')){
+    /* Composition rule: sparse. Roughly 20% tile coverage, generous air
+       between neighbours, a wide clear center for the copy. Fewer, smaller
+       tiles read as a calm constellation; more/larger reads as clutter. */
+    /* Composition rule: sparse. ~11% tile coverage on canvas with roughly
+       two tile-widths of air between neighbours, and a wide clear center for
+       the copy. Fewer, smaller tiles read as a calm constellation; more or
+       larger reads as clutter. Outer tiles run past the frame on purpose, so
+       the system feels like it continues beyond the viewport. */
     var HO_RINGS = [
-      { rx: 500, ry: 215, tilt: -4, period: 95, tiles: [
-        { p: .00, w: 118, h:  78 }, { p: .085, w:  84, h:  84 }, { p: .17, w:  74, h: 104 },
-        { p: .25, w: 110, h:  72 }, { p: .335, w:  80, h:  80 }, { p: .42, w:  70, h:  98 },
-        { p: .50, w: 114, h:  76 }, { p: .585, w:  86, h:  86 }, { p: .67, w:  72, h: 100 },
-        { p: .75, w: 106, h:  70 }, { p: .835, w:  82, h:  82 }, { p: .92, w:  74, h: 102 }
+      { rx: 520, ry: 235, tilt: -4, period: 95, tiles: [
+        { p: .00, w: 90, h: 60 }, { p: .10, w: 62, h: 62 }, { p: .20, w: 56, h: 84 },
+        { p: .30, w: 84, h: 56 }, { p: .40, w: 68, h: 68 }, { p: .50, w: 52, h: 78 },
+        { p: .60, w: 96, h: 64 }, { p: .70, w: 58, h: 58 }, { p: .80, w: 60, h: 88 },
+        { p: .90, w: 86, h: 58 }
       ]},
-      { rx: 745, ry: 330, tilt: -4, period: 135, tiles: [
-        { p: .00, w: 126, h:  84 }, { p: .063, w:  90, h:  90 }, { p: .125, w:  78, h: 110 },
-        { p: .19, w: 118, h:  78 }, { p: .25, w:  88, h:  88 }, { p: .313, w:  74, h: 104 },
-        { p: .375, w: 122, h:  80 }, { p: .44, w:  92, h:  92 }, { p: .50, w:  80, h: 112 },
-        { p: .563, w: 114, h:  76 }, { p: .625, w:  86, h:  86 }, { p: .69, w:  76, h: 106 },
-        { p: .75, w: 124, h:  82 }, { p: .813, w:  90, h:  90 }, { p: .875, w:  78, h: 108 },
-        { p: .94, w: 116, h:  76 }
+      { rx: 790, ry: 355, tilt: -4, period: 135, tiles: [
+        { p: .038, w: 94, h: 62 }, { p: .115, w: 66, h: 66 }, { p: .192, w: 58, h: 86 },
+        { p: .269, w: 88, h: 58 }, { p: .346, w: 62, h: 62 }, { p: .423, w: 54, h: 82 },
+        { p: .500, w: 92, h: 62 }, { p: .577, w: 70, h: 70 }, { p: .654, w: 56, h: 84 },
+        { p: .731, w: 86, h: 58 }, { p: .808, w: 64, h: 64 }, { p: .885, w: 58, h: 86 },
+        { p: .962, w: 90, h: 60 }
       ]},
-      { rx: 1010, ry: 455, tilt: -4, period: 180, tiles: [
-        { p: .00, w: 134, h:  88 }, { p: .05, w:  96, h:  96 }, { p: .10, w:  84, h: 118 },
-        { p: .15, w: 126, h:  84 }, { p: .20, w:  94, h:  94 }, { p: .25, w:  80, h: 112 },
-        { p: .30, w: 130, h:  86 }, { p: .35, w:  98, h:  98 }, { p: .40, w:  86, h: 120 },
-        { p: .45, w: 122, h:  80 }, { p: .50, w:  92, h:  92 }, { p: .55, w:  82, h: 114 },
-        { p: .60, w: 132, h:  88 }, { p: .65, w:  96, h:  96 }, { p: .70, w:  84, h: 118 },
-        { p: .75, w: 124, h:  82 }, { p: .80, w:  94, h:  94 }, { p: .85, w:  80, h: 112 },
-        { p: .90, w: 128, h:  86 }, { p: .95, w:  90, h:  90 }
+      { rx: 1050, ry: 470, tilt: -4, period: 180, tiles: [
+        { p: .029, w: 98, h: 66 }, { p: .088, w: 70, h: 70 }, { p: .147, w: 60, h: 88 },
+        { p: .206, w: 90, h: 60 }, { p: .265, w: 64, h: 64 }, { p: .324, w: 56, h: 84 },
+        { p: .382, w: 96, h: 64 }, { p: .441, w: 72, h: 72 }, { p: .500, w: 58, h: 86 },
+        { p: .559, w: 92, h: 62 }, { p: .618, w: 66, h: 66 }, { p: .677, w: 60, h: 90 },
+        { p: .735, w: 94, h: 62 }, { p: .794, w: 68, h: 68 }, { p: .853, w: 56, h: 82 },
+        { p: .912, w: 88, h: 58 }, { p: .971, w: 64, h: 64 }
       ]}
     ];
 
@@ -406,7 +412,7 @@
           /* deterministic per-tile jitter: organic scatter, not perfect rails */
           rx: ring.rx * (0.94 + ((hoN * 53) % 13) / 100),
           ry: ring.ry * (0.94 + ((hoN * 31) % 13) / 100),
-          baseTilt: ((hoN * 37) % 27) - 13,
+          baseTilt: ((hoN * 37) % 19) - 9,
           cosT: Math.cos(tiltRad), sinT: Math.sin(tiltRad),
           phase: t.p * Math.PI * 2,
           speed: (Math.PI * 2) / ring.period,
