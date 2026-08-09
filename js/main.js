@@ -549,16 +549,28 @@
           im.style.objectPosition = HO_FOCAL[t.src.split('/').pop()] || '50% 50%';
           el.appendChild(im);
         }
+        el.style.opacity = 0; /* the ticker owns visibility (spiral arrival) */
         mgField.appendChild(el);
         mgTiles.push({
           el: el, w: t.w, h: t.h, rad: t.rad,
           r: Math.hypot(t.x, t.y),
           a0: Math.atan2(t.y, t.x),
-          baseTilt: t.rot
+          baseTilt: t.rot,
+          /* same spiral-sweep entrance as the desktop hero, shorter hold */
+          arriveDelay: 1.0 +
+            ((Math.atan2(t.y, t.x) / (Math.PI * 2) + .5) * .55) +
+            (Math.hypot(t.x, t.y) / 1500) * .6
         });
       });
       mgSetScale();
       window.addEventListener('resize', mgSetScale);
+      /* gate intro: copy surfaces first (same rhythm as the hero), tiles
+         then sweep in via their arriveDelay above */
+      if (mgMQ.matches){
+        gsap.fromTo(['.mobile-gate .mg-logo', '.mg-in > *', '.mg-contact'],
+          { y: 22, opacity: 0 },
+          { y: 0, opacity: 1, duration: .85, ease: 'power4.out', stagger: .09, delay: .25 });
+      }
     }
 
     var hoTiles = [];
@@ -653,16 +665,22 @@
           zIndex: 1
         });
       }
-      /* mobile gate: same field, same slow spiral, no scroll influence */
+      /* mobile gate: same field, same slow spiral, no scroll influence.
+         Tiles arrive with the same spiral-sweep entrance as the hero:
+         opacity leads, radius condenses 6% inward as each lands. */
       if (mgMQ.matches && mgTiles.length){
         var gTheta = t * HO_OMEGA;
         for (var k = 0; k < mgTiles.length; k++){
           var g = mgTiles[k];
-          var gr = g.r * mgScale * breathe;
+          var gAge = Math.min(Math.max((t - g.arriveDelay) / 1.1, 0), 1);
+          var gArrive = 1 - Math.pow(1 - gAge, 4);
+          var gAppear = 1 - Math.pow(1 - Math.min(gAge * 1.5, 1), 3);
+          var gr = g.r * mgScale * breathe * (1.06 - .06 * gArrive);
           gsap.set(g.el, {
             x: Math.cos(g.a0 + gTheta) * gr,
             y: Math.sin(g.a0 + gTheta) * gr,
-            rotation: g.baseTilt
+            rotation: g.baseTilt,
+            opacity: gAppear
           });
         }
       }
