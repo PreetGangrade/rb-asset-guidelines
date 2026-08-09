@@ -81,43 +81,60 @@ h1,h2,h3{font-weight:700;letter-spacing:-0.025em;line-height:1.04;text-wrap:bala
 }
 /* ---------- hero (1:1 from hero.fig — 1440x800 canvas) ---------- */
 :root{--hs:1;--font-bull:"Bull Text","Schibsted Grotesk",-apple-system,BlinkMacSystemFont,sans-serif}
+/* mobile gate, 1:1 with Figma 921:27255: static orbit field on brand blue,
+   centre radial glow, top/bottom fades, copy + download + Ask the team */
 .mobile-gate{
   display:none;position:fixed;top:0;left:0;z-index:9999;
-  width:100vw;height:100svh;overflow-y:auto;
-  background:
-    radial-gradient(120% 80% at 50% -10%, rgba(11,99,229,.14), transparent 60%),
-    var(--bg);
-  padding:clamp(20px,6vw,40px);
+  width:100vw;height:100svh;overflow:hidden;
+  background:#000f1e;
+}
+.mg-field{position:absolute;left:50%;top:50%;width:0;height:0}
+.mg-tile{
+  position:absolute;overflow:hidden;
+  background:rgba(255,255,255,.08);
+  border:0.5px solid rgba(255,255,255,.12);
+}
+.mg-tile img{width:100%;height:100%;object-fit:cover;display:block}
+/* the gate is the whole experience on mobile: no page scroll behind it */
+@media (max-width:767.98px){ html, body{overflow:hidden;height:100%} }
+.mg-grad{
+  position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(69% 34% at 50% 50%, #000e1e 20%, rgba(0,14,30,.8) 45%, rgba(0,14,30,.45) 70%, transparent 100%);
+}
+.mg-fade{position:absolute;left:0;right:0;height:113px;pointer-events:none}
+.mg-fade-top{top:0;background:linear-gradient(0deg, rgba(0,14,30,0) 0%, rgba(0,14,30,.45) 30%, rgba(0,14,30,.8) 55%, #000e1e 80%)}
+.mg-fade-bottom{bottom:0;background:linear-gradient(180deg, rgba(0,14,30,0) 0%, rgba(0,14,30,.45) 30%, rgba(0,14,30,.8) 55%, #000e1e 80%)}
+.mobile-gate .mg-logo{
+  position:absolute;left:16px;top:24px;height:40px;width:auto;color:#fff;
 }
 .mobile-gate .mg-in{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
   display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;
-  width:100%;max-width:420px;margin:auto;
+  width:min(392px, calc(100vw - 32px));padding:0 16px;
 }
 .mobile-gate .mg-in > *{max-width:100%}
-.mobile-gate .mg-logo{height:clamp(32px,8vw,38px);width:auto;color:var(--ink)}
-.mg-eyebrow{
-  font-family:var(--font-mono);font-size:clamp(10px,2.7vw,11px);letter-spacing:.2em;text-transform:uppercase;
-  color:var(--muted);
-}
 .mobile-gate h2{
-  font-family:var(--font-bull);font-weight:700;letter-spacing:-0.02em;
-  font-size:clamp(26px,7vw,36px);line-height:1.08;color:var(--ink);
+  font-family:var(--font-bull);font-weight:700;letter-spacing:0;
+  font-size:24px;line-height:32px;color:#fff;text-transform:uppercase;
   overflow-wrap:break-word;
 }
-.mobile-gate p{color:var(--ink-dim);font-size:clamp(14px,3.6vw,16px);line-height:1.55}
+.mobile-gate .mg-in p{color:#aaa;font-size:14px;line-height:20px;font-weight:400}
 .mg-cta{
-  margin-top:6px;display:inline-flex;align-items:center;gap:9px;
-  height:50px;padding:0 24px;border-radius:999px;
-  background:#f8f8f8;color:#00162b;
-  font-family:var(--font-bull);font-weight:600;font-size:15px;
-  transition:transform 160ms var(--ease),background 180ms ease;
+  display:inline-flex;align-items:center;justify-content:center;
+  width:180px;height:48px;border-radius:200px;
+  background:#fff;color:#000f1e;
+  font-family:var(--font-bull);font-weight:500;font-size:14px;line-height:22px;
+  transition:transform 160ms var(--ease),box-shadow 180ms ease;
 }
-.mg-cta svg{width:17px;height:17px}
 .mg-cta:active{transform:scale(.97)}
-@media (hover:hover) and (pointer:fine){ .mg-cta:hover{background:#fff} }
-.mg-contact{font-size:14px;color:var(--muted)}
-.mg-contact a{color:var(--ink-dim);border-bottom:1px solid var(--hair);padding-bottom:1px}
-@media (max-width:900px){ .mobile-gate{display:flex;align-items:center;justify-content:center} }
+@media (hover:hover) and (pointer:fine){ .mg-cta:hover{box-shadow:inset 0 0 0 2px rgba(0,15,30,.1)} }
+.mg-contact{
+  position:absolute;left:50%;bottom:32px;transform:translateX(-50%);
+  width:max-content;font-size:14px;line-height:20px;color:#aaa;z-index:1;
+}
+.mg-contact a{color:#fff}
+/* the full experience holds down to 768px; below that the gate takes over */
+@media (max-width:767.98px){ .mobile-gate{display:block} }
 
 .hero-fig{position:relative;height:320vh;background:#fff}
 .hero-sticky{
@@ -162,6 +179,25 @@ h1,h2,h3{font-weight:700;letter-spacing:-0.025em;line-height:1.04;text-wrap:bala
   .fg-pill-cta:hover{background:#032a4e;box-shadow:none}
 }
 
+/* orbit hero mode: the in-page nav matches the floating nav's glass-blur
+   feel (translucent pills, backdrop blur from the base .fg-pill rule);
+   only the Download CTA is solid white */
+html.hero-orbit-mode .fg-nav:not(.fg-nav--float) .fg-logo svg{color:#fff}
+html.hero-orbit-mode .fg-nav:not(.fg-nav--float) .fg-pill{background:rgba(255,255,255,.12);color:#fff}
+@media (hover:hover) and (pointer:fine){
+  html.hero-orbit-mode .fg-nav:not(.fg-nav--float) .fg-pill:hover{box-shadow:inset 0 0 0 1px rgba(255,255,255,.16)}
+}
+html.hero-orbit-mode .fg-nav:not(.fg-nav--float) .fg-pill-cta{background:#fff;color:#00162b}
+html.hero-orbit-mode .fg-nav:not(.fg-nav--float) .fg-pill-cta:focus-visible{outline:2px solid rgba(255,255,255,.6)}
+@media (hover:hover) and (pointer:fine){
+  html.hero-orbit-mode .fg-nav:not(.fg-nav--float) .fg-pill-cta:hover{background:#fff;box-shadow:inset 0 0 0 2px rgba(0,15,30,.1)}
+}
+/* the default nav sizing reads oversized on laptop widths: step the whole
+   bar down, mirroring the floating nav's zoom tiers */
+@media (max-width:1440px){ .fg-nav:not(.fg-nav--float){zoom:.85} }
+@media (max-width:1200px){ .fg-nav:not(.fg-nav--float){zoom:.75} }
+@media (max-width:960px){ .fg-nav:not(.fg-nav--float){zoom:.62} }
+
 /* floating nav — runtime clone of .fg-nav; slides in when the user scrolls
    back up past the hero (headroom pattern). Dark glass so it reads on both
    the navy sections and the light ones. Hidden state is owned by GSAP. */
@@ -187,7 +223,7 @@ h1,h2,h3{font-weight:700;letter-spacing:-0.025em;line-height:1.04;text-wrap:bala
 .fg-nav--float .fg-pill-cta{background:#f8f8f8;color:#00162b}
 .fg-nav--float .fg-pill-cta:focus-visible{outline:2px solid rgba(248,248,248,.6)}
 @media (hover:hover) and (pointer:fine){
-  .fg-nav--float .fg-pill-cta:hover{background:#fff;box-shadow:none}
+  .fg-nav--float .fg-pill-cta:hover{background:#fff;box-shadow:inset 0 0 0 2px rgba(0,15,30,.1)}
 }
 
 /* headline */
@@ -230,12 +266,23 @@ h1,h2,h3{font-weight:700;letter-spacing:-0.025em;line-height:1.04;text-wrap:bala
 
 
 /* ---------- orbit hero (toggle variant, Cosmos-style) ---------- */
-.hero-orbit{position:relative;height:220vh;background:#fff;display:none}
+/* 200vh, split in two: the first 100vh of scroll drives the dive (text
+   scales away, bg commits to blue, tiles fade in place while spiralling);
+   during the second 100vh the hero STAYS PINNED and the truth section
+   slides over it (negative margin below), so the field never scrolls away,
+   it gets covered. Next section is fully on screen in 2-3 scrolls. */
+.hero-orbit{position:relative;height:200vh;background:#000f1e;display:none;z-index:0}
+/* the incoming section carries NO background of its own in orbit mode: only
+   its content rises over the hero, so its edge can never cut a tile. The
+   hero's scaling centre glow is the only thing that swallows the field, and
+   the body backstop below keeps everything blue once the hero unpins. */
+html.hero-orbit-mode:not(.reduced) .truth{margin-top:-100vh;z-index:1;background:transparent}
+html.hero-orbit-mode body{background:#000f1e}
 html.hero-orbit-mode .hero-fig{display:none}
 html.hero-orbit-mode .hero-orbit{display:block}
 .ho-sticky{
   position:sticky;top:0;height:100svh;overflow:hidden;
-  display:grid;place-items:center;background:#fff;
+  display:grid;place-items:center;background:#000f1e;
 }
 .ho-canvas{
   position:absolute;left:50%;top:50%;width:1440px;height:800px;
@@ -246,27 +293,42 @@ html.hero-orbit-mode .hero-orbit{display:block}
 .ho-tile{
   position:absolute;display:flex;align-items:center;justify-content:center;overflow:hidden;
   opacity:0; /* the ticker owns visibility; prevents a corner flash pre-first-frame */
-  /* placeholder slots read as real cards so the composition is judgeable
-     before the imagery lands; an <img> child covers this entirely */
-  background:linear-gradient(150deg,#f1f4f8,#e6ebf1);
-  border-radius:12px;
-  /* light touch: the tiles sit on white, they don't hover over it */
-  box-shadow:0 4px 14px rgba(25,33,61,.10);
+  /* glass fill and hairline flipped light for the blue canvas, no shadow */
+  background:rgba(255,255,255,.08);
+  border:0.676px solid rgba(255,255,255,.12);
 }
-.ho-tile span{font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;color:rgba(0,22,43,.30)}
+.ho-tile span{font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;color:rgba(255,255,255,.35)}
 .ho-tile img{width:100%;height:100%;object-fit:cover}
 .ho-glow{
-  position:absolute;left:50%;top:50%;width:1560px;height:1180px;
+  position:absolute;left:50%;top:50%;width:2880px;height:800px;
   transform:translate(-50%,-50%);pointer-events:none;opacity:0;
-  /* cosmos-strength veil: the center third washes out under the copy */
-  background:radial-gradient(48% 48% at 50% 50%, #fff 30%, rgba(255,255,255,.92) 52%, transparent 78%);
+  z-index:1; /* above the tiles (ticker sets zIndex:1 on each), below the copy */
+  /* per design handoff: a CIRCLE (no horizontal stretching), solid core to
+     20%, steep falloff, long transparent tail. Master intensity 0.96 is the
+     entrance tween's target opacity in js/main.js. Brand blue: tiles fade
+     into the same #000f1e the rest of the site uses. */
+  background-image:radial-gradient(circle at 50% 50%, #000f1e 20%, rgba(0,15,30,.5) 24.8%, rgba(0,15,30,.1) 29.6%, transparent 100%);
 }
 .ho-copy{
   position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  width:760px;text-align:center;font-family:var(--font-bull);color:#00162b;z-index:2;
+  width:852px;text-align:center;font-family:var(--font-bull);z-index:2;
 }
-.ho-copy h1{font-family:var(--font-bull);font-size:54px;line-height:1.12;font-weight:700;letter-spacing:-.01em;color:#00162b}
-.ho-sub{margin:18px auto 28px;max-width:520px;font-size:17px;line-height:1.6;font-weight:400;color:rgba(0,22,43,.65)}
+/* Figma 913:17173: Bull Text Bold 48/50, all caps, 8px to the sub */
+.ho-copy h1{
+  font-family:var(--font-bull);
+  font-size:48px;line-height:50px;font-weight:700;color:#fff;text-transform:uppercase;
+}
+.ho-sub{margin:8px auto 16px;font-size:16px;line-height:26px;font-weight:400;color:#aaa}
+.ho-cta{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:180px;height:48px;border-radius:200px;
+  background:#fff;color:#00162b;
+  font-family:var(--font-bull);font-weight:500;font-size:14px;line-height:22px;
+  transition:transform 160ms var(--ease),background 180ms ease;
+}
+.ho-cta:active{transform:scale(.97)}
+@media (hover:hover) and (pointer:fine){ .ho-cta:hover{box-shadow:inset 0 0 0 2px rgba(0,15,30,.1)} }
+.ho-cta:focus-visible{outline:2px solid rgba(255,255,255,.6);outline-offset:2px}
 .reduced .hero-orbit{height:auto}
 .reduced .ho-sticky{position:static;height:auto;padding:140px 0}
 
@@ -283,20 +345,23 @@ html.hero-orbit-mode .hero-orbit{display:block}
 }
 .t-stage{grid-area:1/1;position:relative;opacity:0}
 .t-stage:first-child{opacity:1}
-.t-stage.t1{width:918px}
-.t-stage.t2,.t-stage.t3{width:1136px}
+/* Figma 912:16789: 32/50 Bull Text, bold white lead, medium 60% rest */
+.t-stage.t1{width:700px}
+.t-stage.t2,.t-stage.t3{width:800px}
 .t-copy{position:relative;z-index:1;
-  font-family:var(--font-bull);font-weight:700;
-  font-size:60px;line-height:79px;letter-spacing:0;
+  font-family:var(--font-bull);font-weight:500;
+  font-size:32px;line-height:50px;letter-spacing:0;
   text-align:center;
 }
-.t-copy .lead{color:#fff}
+.t-copy .lead{color:#fff;font-weight:700}
 .t-copy .rest{color:rgba(255,255,255,.6)}
-.t-circle{position:absolute;left:323px;top:131px;width:413px;height:144px;pointer-events:none}
-.t-under{position:absolute;top:72px;width:243px;height:15px;pointer-events:none;filter:url(#roughen-sm)}
-.t-under.u1{left:71px}
-.t-under.u2{left:310px}
-.t-arrow{position:absolute;left:-9px;top:-162px;width:179px;height:162px;pointer-events:none}
+/* scribbles kept; positions are computed in js/main.js from the actual
+   word boxes (after fonts load), so the circle always wraps "press play."
+   and the underline runs in ONE flow under the whole lead phrase */
+.t-circle{position:absolute;pointer-events:none}
+.t-under{position:absolute;height:8px;pointer-events:none;filter:url(#roughen-sm)}
+.t-under.u2{display:none} /* single continuous underline; kept for later */
+.t-arrow{position:absolute;left:0;top:-95px;width:95px;height:86px;pointer-events:none}
 
 /* ---------- uba hero (Figma 20:12914) ---------- */
 .uba-hero{position:relative;height:220vh;background:#000f1e}
@@ -320,23 +385,44 @@ html.hero-orbit-mode .hero-orbit{display:block}
 }
 .uc-rb{color:#db0a40;font-weight:700;font-style:italic;font-size:10px;line-height:1}
 .uc-tv{color:#c7ccd2;font-weight:700;font-size:9px;line-height:1}
+/* Figma 914:19291: INTRODUCING eyebrow, single-line uppercase 44px title,
+   16px two-line sub, blueprint guide lines drawn behind the copy */
 .uba-center{
   position:absolute;left:294px;top:50%;transform:translateY(-50%);width:852px;
-  display:grid;gap:8px;justify-items:center;text-align:center;
+  display:grid;gap:12px;justify-items:center;text-align:center;
 }
-.uba-copy{position:relative;display:grid;gap:10px;justify-items:center;width:100%}
+.uba-copy{position:relative;display:grid;gap:12px;justify-items:center;width:100%}
+.uba-eyebrow{
+  font-family:var(--font-bull);font-weight:500;
+  font-size:16px;line-height:22px;letter-spacing:.12em;
+  text-transform:uppercase;color:rgba(255,255,255,.8);
+  margin-bottom:-4px; /* 12px grid gap - 4 = the 8px eyebrow-to-title gap */
+}
 .uba-title .wline{padding-bottom:.04em;margin-bottom:-.04em}
 .uba-title{
   font-family:var(--font-bull);font-weight:700;letter-spacing:0;
-  font-size:60px;line-height:60px;color:#fff;
+  font-size:44px;line-height:52px;color:#fff;text-transform:uppercase;
 }
-.uba-mark{position:absolute;pointer-events:none}
-.uba-mark.ml{left:172px;top:0;width:80px;height:120px}
-.uba-mark.mr{left:600px;top:-2px;width:80px;height:120px}
+/* hand-drawn marks hidden for now (Preet is trying the guide lines instead);
+   code kept so they can come back */
+.uba-mark{display:none;position:absolute;pointer-events:none}
+.uba-mark.ml{left:104px;top:26px;width:100px;height:150px}
+.uba-mark.mr{left:646px;top:24px;width:100px;height:150px}
 .uba-sub{
-  font-family:var(--font-bull);font-weight:500;
-  font-size:20px;line-height:32.4px;color:rgba(255,255,255,.6);white-space:nowrap;
+  font-family:var(--font-bull);font-weight:400;
+  font-size:16px;line-height:26px;color:rgba(255,255,255,.6);
 }
+/* blueprint guides: hairlines + circle, revealed by GSAP on arrival */
+.uba-guides{position:absolute;inset:0;pointer-events:none}
+.ug{position:absolute;background:rgba(255,255,255,.08)}
+.ug-h{left:0;right:0;height:1px;transform:scaleX(0)}
+/* verticals overshoot the 800px canvas so they always run the full height
+   of the viewport, even on tall screens where the canvas is letterboxed */
+.ug-v{top:-600px;bottom:-600px;width:1px;transform:scaleY(0)}
+/* the circle sits EDGE TO EDGE between the two vertical guidelines
+   (x424 -> x1015, r=295.5) and is centred vertically in the 800px canvas
+   (cy=400): equal margin above and below */
+.ug-circle{position:absolute;left:424px;top:104px;width:591px;height:591px;overflow:visible}
 .uba-btn{
   width:180px;height:48px;border-radius:200px;
   display:inline-flex;align-items:center;justify-content:center;
@@ -347,7 +433,7 @@ html.hero-orbit-mode .hero-orbit{display:block}
 .uba-btn:active{transform:scale(.97)}
 .uba-btn:focus-visible{outline:2px solid rgba(255,255,255,.75);outline-offset:3px}
 @media (hover:hover) and (pointer:fine){
-  .uba-btn:hover{background:#fff;transform:scale(1.04)}
+  .uba-btn:hover{background:#fff;transform:scale(1.04);box-shadow:inset 0 0 0 2px rgba(0,15,30,.1)}
   .uba-btn:hover:active{transform:scale(.97)}
 }
 
@@ -520,7 +606,9 @@ html.hero-orbit-mode .hero-orbit{display:block}
   position:absolute;left:50%;top:50%;width:1440px;height:800px;
   transform:translate(-50%,-50%) scale(var(--hs));
 }
-.fo-heads{position:absolute;left:50%;transform:translateX(-50%);top:64px;width:918px;height:79px;display:grid}
+/* content block (heads 41-120, stage 117-693, tabs 713-759) is centred in
+   the 800px canvas: equal breathing room above the title and below the tabs */
+.fo-heads{position:absolute;left:50%;transform:translateX(-50%);top:41px;width:918px;height:79px;display:grid}
 .fo-head{
   grid-area:1/1;opacity:0;
   font-family:var(--font-bull);font-weight:700;
@@ -529,7 +617,7 @@ html.hero-orbit-mode .hero-orbit{display:block}
 .fo-head:first-child{opacity:1}
 .fo-hint{font-weight:500;font-size:.5em;color:rgba(255,255,255,.4);vertical-align:middle;margin-left:6px}
 .fo-stage{
-  position:absolute;left:50%;transform:translateX(-50%);top:140px;
+  position:absolute;left:50%;transform:translateX(-50%);top:117px;
   width:1071px;height:576px;border-radius:12px;
   border:1px solid rgba(255,255,255,.10);overflow:hidden;
   background:#02060c;
@@ -553,14 +641,15 @@ html.hero-orbit-mode .hero-orbit{display:block}
 }
 .fo-sketch{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
 .fo-tabs{
-  position:absolute;left:50%;transform:translateX(-50%);top:736px;
+  position:absolute;left:50%;transform:translateX(-50%);top:713px;
   display:flex;gap:2px;padding:4px;border-radius:9999px;
   background:rgba(255,255,255,.1);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.08); /* hairline on the tab bar */
 }
 .fo-ind{
   position:absolute;top:4px;left:4px;height:calc(100% - 8px);width:0;
-  border-radius:9999px;background:#00162b;
-  box-shadow:0 2px 8px rgba(0,0,0,.3);
+  border-radius:9999px;background:rgba(255,255,255,.14);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
   pointer-events:none;
 }
 .fo-tab{

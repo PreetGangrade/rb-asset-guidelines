@@ -25,9 +25,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,500&family=Caveat:wght@500;600&family=IBM+Plex+Mono:wght@400;500&family=Averia+Serif+Libre:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
-<div class="mobile-gate" role="dialog" aria-label="Desktop only">
-  <div class="mg-in">
-    <svg class="mg-logo" viewBox="0 0 110 60" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Red Bull Streaming Platform">
+<div class="mobile-gate" role="dialog" aria-label="Desktop experience notice">
+  <!-- static orbit tile field, built by js/main.js from HO_FIELD at 0.533x
+       (1:1 with Figma 921:27255) -->
+  <div class="mg-field" aria-hidden="true"></div>
+  <div class="mg-grad" aria-hidden="true"></div>
+  <div class="mg-fade mg-fade-top" aria-hidden="true"></div>
+  <div class="mg-fade mg-fade-bottom" aria-hidden="true"></div>
+  <svg class="mg-logo" viewBox="0 0 110 60" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Red Bull Streaming Platform">
         <path d="M19.0761 6.79142C16.0639 6.79142 13.6222 9.25112 13.6222 12.2958C13.6222 15.3406 16.0639 17.8003 19.0761 17.8003C21.3712 17.8003 23.1678 16.7632 24.0901 15.1411L21.4138 13.9046C21.0699 14.6412 20.2729 15.1597 19.3453 15.1597C18.1058 15.1597 17.0982 14.2397 17.0982 13.1095C17.0982 13.0351 17.0715 13.0617 17.0768 12.9899H24.3647C24.3887 12.7692 24.3993 12.5405 24.3993 12.3038C24.45 8.74323 22.0856 6.79142 19.0761 6.79142ZM17.0902 11.1019C17.0902 9.99302 17.9938 9.09158 19.1027 9.09158C20.2116 9.09158 21.1206 9.99036 21.1206 11.1019H17.0902Z" fill="#DB0A40"/>
         <path d="M13.0492 5.81817C13.0492 3.12978 10.8234 0.951942 8.07777 0.951942C7.99514 0.951942 7.60862 0.954603 7.52598 0.957262H1.74158V17.4306H5.25221V3.79988L7.34472 3.78127C8.64288 3.78127 9.6265 4.74919 9.6265 5.93517C9.6265 7.12115 8.57624 8.09173 7.27808 8.09173L6.46774 8.11034V12.0326L9.97303 17.4306H14.1101L9.26131 10.5488C11.4391 10.0276 13.0492 8.10768 13.0492 5.81817Z" fill="#DB0A40"/>
         <path d="M34.2089 8.17419C33.3292 7.30997 32.1643 6.78346 30.8901 6.78346C28.1659 6.78346 25.9587 9.1953 25.9587 12.1682C25.9587 15.1411 28.1659 17.553 30.8901 17.553C32.1776 17.553 33.3425 17.0052 34.2195 16.125V17.4519H37.4982V0H34.2089V8.17685V8.17419ZM31.8284 14.9098C30.493 14.9098 29.4054 13.7291 29.4054 12.2639C29.4054 10.7988 30.493 9.6181 31.8284 9.6181C33.1639 9.6181 34.2488 10.8014 34.2488 12.2639C34.2488 13.7265 33.1666 14.9098 31.8284 14.9098Z" fill="#DB0A40"/>
@@ -38,15 +43,12 @@
         <path d="M106.092 53.427H102.188H98.28H94.3724H90.4675H86.5626V57.3197H90.4675H94.3724H98.28H102.188H106.092H110V53.427H106.092Z" fill="#DB0A40"/>
         <path d="M6.13483 36.8354C2.91404 36.8354 0.744944 35.1702 0.635393 32.5629H3.83427C3.9 33.5489 4.86404 34.2281 6.13483 34.2281C7.47135 34.2281 8.26011 33.6365 8.26011 32.5848C8.26011 31.7522 7.84382 31.3579 6.46348 30.8539L4.66685 30.1966C2.30056 29.3421 1.05169 28.0494 1.05169 25.7489C1.05169 23.2511 3.11124 21.5421 6.13483 21.5421C9.07079 21.5421 10.8893 23.0758 11.1084 25.7489H7.95337C7.88764 24.7191 7.23034 24.1275 6.11292 24.1275C4.9736 24.1275 4.25056 24.6972 4.25056 25.6393C4.25056 26.5157 4.71067 26.9539 6.02528 27.4359L7.93146 28.1371C10.4949 29.0792 11.5028 30.2843 11.5028 32.3657C11.5028 35.1264 9.42135 36.8354 6.13483 36.8354ZM18.4113 36.5506C15.6288 36.5506 14.3141 35.3455 14.3141 32.8258V28.2904H12.7147V25.6831H14.3141V23.0977H17.3597V25.6831H19.967V28.2904H17.3597V32.4753C17.3597 33.527 17.8198 33.9652 18.9372 33.9652H20.1861V36.5506H18.4113ZM21.9633 36.5506V25.6831H24.7678V27.3921C25.3375 26.2528 26.3015 25.6831 27.6381 25.6831H28.4487V28.5315H27.5942C25.9072 28.5315 25.0089 29.4517 25.0089 31.2483V36.5506H21.9633ZM34.8104 36.8135C31.3705 36.8135 29.1795 34.4034 29.1795 31.1607C29.1795 27.8741 31.3486 25.4202 34.6789 25.4202C38.2064 25.4202 40.4194 28.159 40.0907 31.9494H32.2031C32.4441 33.4393 33.3643 34.3595 34.8104 34.3595C35.8401 34.3595 36.3879 33.9871 36.7385 33.3079H39.7621C39.0828 35.455 37.3739 36.8135 34.8104 36.8135ZM32.2907 29.8899H37.089C36.8918 28.6629 36.0154 27.8741 34.6789 27.8741C33.43 27.8741 32.5975 28.6629 32.2907 29.8899ZM45.2077 36.8135C42.8853 36.8135 41.5488 35.6084 41.5488 33.5489C41.5488 31.4017 42.9948 30.2185 45.6021 30.2185H48.2094V29.6927C48.2094 28.4438 47.596 27.7646 46.4347 27.7646C45.5802 27.7646 44.9667 28.1371 44.8134 28.7506H42.0089C42.1622 26.7129 43.9151 25.4202 46.5224 25.4202C49.4802 25.4202 51.1454 26.9977 51.1454 29.8022V36.5506H48.3847V35.455C47.6836 36.3315 46.5881 36.8135 45.2077 36.8135ZM44.5285 33.4393C44.5285 34.2719 45.0325 34.7101 46.0403 34.7101C47.3549 34.7101 48.2094 33.8337 48.2094 32.541V32.1685H46.1718C45.0982 32.1685 44.5285 32.6067 44.5285 33.4393ZM53.7587 36.5506V25.6831H56.5632V26.9758C57.1767 25.9899 58.1626 25.4202 59.4553 25.4202C60.7918 25.4202 61.8654 26.0118 62.5227 27.0635C63.2677 26.0118 64.3851 25.4202 65.8092 25.4202C68.2851 25.4202 69.7969 27.0635 69.7969 29.8241V36.5506H66.7514V30.2404C66.7514 28.9697 66.0941 28.2028 65.0862 28.2028C64.0564 28.2028 63.3115 29.0135 63.3115 30.1528V36.5506H60.266V30.2404C60.266 28.9697 59.6087 28.2028 58.6008 28.2028C57.5272 28.2028 56.8042 29.0354 56.8042 30.2404V36.5506H53.7587ZM72.3951 36.5506V25.6831H75.4406V36.5506H72.3951ZM73.9507 23.9522C72.9429 23.9522 72.176 23.1854 72.176 22.1775C72.176 21.1697 72.9429 20.4247 73.9507 20.4247C74.9805 20.4247 75.7474 21.1697 75.7474 22.1775C75.7474 23.1854 74.9805 23.9522 73.9507 23.9522ZM78.1508 36.5506V25.6831H80.9553V26.9977C81.5907 25.9899 82.6205 25.4202 83.9351 25.4202C86.3014 25.4202 87.8351 27.173 87.8351 29.8241V36.5506H84.7896V30.2404C84.7896 28.9916 84.1104 28.2028 83.0368 28.2028C81.9632 28.2028 81.1963 29.0354 81.1963 30.2404V36.5506H78.1508ZM95.2746 40.3848C92.4043 40.3848 90.6296 39.0045 90.1695 37.1859H93.2808C93.5875 37.6461 94.2448 38.0404 95.3184 38.0404C96.874 38.0404 97.6409 37.1421 97.6409 35.477V34.5567C96.9617 35.455 95.9538 35.959 94.5954 35.959C91.7032 35.959 89.797 33.7899 89.797 30.6567C89.797 27.5455 91.7032 25.4202 94.6611 25.4202C96.151 25.4202 97.2465 26.0337 97.8819 27.0416V25.6831H100.708V35.1702C100.708 38.4129 98.7364 40.3848 95.2746 40.3848ZM95.3184 33.527C96.8302 33.527 97.7723 32.4095 97.7723 30.6786C97.7723 28.9697 96.8521 27.8961 95.3184 27.8961C93.7628 27.8961 92.8426 28.9039 92.8426 30.6786C92.8426 32.4534 93.7628 33.527 95.3184 33.527ZM1.62135 57.5506V42.805H6.7264C9.85955 42.805 11.7657 44.6017 11.7657 47.5157C11.7657 50.4298 9.83764 52.2264 6.7264 52.2264H4.73258V57.5506H1.62135ZM6.5073 49.6848C7.8 49.6848 8.58876 48.8522 8.58876 47.5376C8.58876 46.2011 7.8 45.4124 6.5073 45.4124H4.73258V49.6848H6.5073ZM13.6615 57.5506V42.805H16.707V57.5506H13.6615ZM22.4846 57.8135C20.1621 57.8135 18.8256 56.6084 18.8256 54.5489C18.8256 52.4017 20.2716 51.2185 22.8789 51.2185H25.4863V50.6927C25.4863 49.4438 24.8728 48.7646 23.7115 48.7646C22.857 48.7646 22.2436 49.1371 22.0902 49.7506H19.2857C19.4391 47.7129 21.1919 46.4202 23.7992 46.4202C26.757 46.4202 28.4222 47.9977 28.4222 50.8022V57.5506H25.6615V56.455C24.9604 57.3315 23.8649 57.8135 22.4846 57.8135ZM21.8054 54.4393C21.8054 55.2719 22.3093 55.7101 23.3172 55.7101C24.6318 55.7101 25.4863 54.8337 25.4863 53.541V53.1685H23.4486C22.375 53.1685 21.8054 53.6067 21.8054 54.4393ZM35.5928 57.5506C32.8102 57.5506 31.4956 56.3455 31.4956 53.8258V49.2904H29.8962V46.6831H31.4956V44.0977H34.5411V46.6831H37.1484V49.2904H34.5411V53.4753C34.5411 54.527 35.0012 54.9652 36.1186 54.9652H37.3675V57.5506H35.5928ZM39.6707 46.6393C39.6707 44.032 41.0291 42.805 43.9212 42.805H45.4768V45.3247H44.206C43.1763 45.3247 42.7162 45.7191 42.7162 46.6393V46.705H45.2139V49.3124H42.7162V57.5506H39.6707V49.3124H38.1589V46.705H39.6707V46.6393ZM51.4121 57.8135C48.2132 57.8135 45.8688 55.4472 45.8688 52.1168C45.8688 48.7865 48.2132 46.4202 51.4121 46.4202C54.6109 46.4202 56.9334 48.7865 56.9334 52.1168C56.9334 55.4472 54.6109 57.8135 51.4121 57.8135ZM51.4121 55.1404C52.9239 55.1404 53.8879 53.9792 53.8879 52.1168C53.8879 50.2764 52.9239 49.1152 51.4121 49.1152C49.9003 49.1152 48.9143 50.2764 48.9143 52.1168C48.9143 53.9792 49.9003 55.1404 51.4121 55.1404ZM58.9795 57.5506V46.6831H61.7839V48.3921C62.3536 47.2528 63.3177 46.6831 64.6542 46.6831H65.4648V49.5315H64.6104C62.9233 49.5315 62.025 50.4517 62.025 52.2483V57.5506H58.9795ZM67.0246 57.5506V46.6831H69.8291V47.9758C70.4425 46.9899 71.4285 46.4202 72.7212 46.4202C74.0577 46.4202 75.1313 47.0118 75.7886 48.0635C76.5336 47.0118 77.651 46.4202 79.0751 46.4202C81.551 46.4202 83.0628 48.0635 83.0628 50.8241V57.5506H80.0173V51.2404C80.0173 49.9697 79.36 49.2028 78.3521 49.2028C77.3223 49.2028 76.5774 50.0135 76.5774 51.1528V57.5506H73.5319V51.2404C73.5319 49.9697 72.8746 49.2028 71.8667 49.2028C70.7931 49.2028 70.0701 50.0354 70.0701 51.2404V57.5506H67.0246Z" fill="currentColor"/>
       </svg>
-    <span class="mg-eyebrow">Content Partner Guidelines</span>
+  <div class="mg-in">
     <h2>One artwork.<br>Built for every screen.</h2>
-    <p>The full walkthrough is a desktop experience. Open it on a larger screen to explore the scroll story, or grab the master asset below.</p>
-    <a class="mg-cta" href="assets/files/UBA-Red-Bull-Streaming-Platform.psd" download>
-      <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2.5v9M5.5 8 9 11.5 12.5 8M3 15h12"/></svg>
-      Download UBA PSD
-    </a>
-    <p class="mg-contact">Questions? <a href="mailto:preet.gangrade@redbull.com">preet.gangrade@redbull.com</a></p>
+    <p>The full walkthrough is a desktop experience.<br>Open it on a larger screen to explore, or<br>grab the master asset below.</p>
+    <a class="mg-cta" href="assets/files/UBA-Red-Bull-Streaming-Platform.zip" download>Download UBA.psd</a>
   </div>
+  <p class="mg-contact">Not sure about something? <a href="mailto:preet.gangrade@redbull.com,joshua.lamb@redbull.com,George.Sarantinos@redbull.com">Ask the team</a></p>
 </div>
 
 <div class="page">
@@ -155,8 +157,11 @@
       <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="6" height="6" rx="1"/><rect x="9.5" y="2.5" width="6" height="6" rx="1"/><rect x="2.5" y="9.5" width="6" height="6" rx="1"/><rect x="9.5" y="9.5" width="6" height="6" rx="1"/></svg>
       Examples
     </a>
-    <button class="fg-pill hero-toggle-pill" type="button" aria-pressed="false">Hero: Classic</button>
-    <a class="fg-pill fg-pill-cta" href="assets/files/UBA-Red-Bull-Streaming-Platform.psd" download>
+    <a class="fg-pill" href="#delivery">
+      <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2.5h10a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-11a1 1 0 0 1 1-1Z"/><path d="M6 6.5h6M6 9.5h6M6 12.5h4"/></svg>
+      Requirements
+    </a>
+    <a class="fg-pill fg-pill-cta" href="assets/files/UBA-Red-Bull-Streaming-Platform.zip" download>
       <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2.5v9M5.5 8 9 11.5 12.5 8M3 15h12"/></svg>
       Download UBA PSD
     </a>
@@ -201,8 +206,8 @@
       <div class="ho-glow" aria-hidden="true"></div>
       <div class="ho-copy">
         <h1>One artwork.<br>Built for every screen.</h1>
-        <p class="ho-sub">Guidelines for preparing and delivering a single master asset across our streaming experience.</p>
-        <a class="fg-cta" href="#truth">Explore guidelines</a>
+        <p class="ho-sub">Guidelines for preparing and delivering a<br>single master asset across our streaming experience</p>
+        <a class="ho-cta" href="#truth">Explore guidelines</a>
       </div>
     </div>
   </div>
@@ -242,14 +247,24 @@
     <div class="uba-float sm" style="left:202px;top:407px"><img src="assets/img/uba-card-rbtv.png" alt=""></div>
     <div class="uba-float sm" style="left:528px;top:663px"><img src="assets/img/uba-card-stv.webp" alt=""></div>
     <div class="uba-float sm" style="left:1084px;top:172px"><img src="assets/img/uba-card-rally.webp" alt=""></div>
+    <!-- blueprint guides (Figma 914:19291): two horizontals, two verticals,
+         one large circle centred on the title; drawn in by GSAP on arrival -->
+    <div class="uba-guides" aria-hidden="true">
+      <span class="ug ug-h" style="top:268px"></span>
+      <span class="ug ug-h" style="top:531px"></span>
+      <span class="ug ug-v" style="left:424px"></span>
+      <span class="ug ug-v" style="left:1015px"></span>
+      <svg class="ug-circle" viewBox="0 0 592 592"><circle id="ug-circ" cx="296" cy="296" r="295" fill="none" stroke="rgba(255,255,255,.09)" stroke-width="1.5"/></svg>
+    </div>
     <div class="uba-center">
       <div class="uba-copy">
         <svg class="uba-mark ml" viewBox="0 0 80 120" aria-hidden="true" style="overflow:visible"><g filter="url(#uba-rough)" fill="none" stroke="#fff" stroke-linecap="round"><path id="uba-mark-l" stroke-width="10" transform="rotate(-10 30 30)" d="M14 15 Q 35 21 47 33 Q 32 41 15 45"/><path id="uba-mark-l2" stroke-width="11" transform="rotate(-27 34 92)" d="M12 76 Q 39 82 56 96 Q 41 104 24 110 M52 70 Q 59 78 61 86"/></g></svg>
         <svg class="uba-mark mr" viewBox="0 0 80 120" aria-hidden="true" style="overflow:visible"><g filter="url(#uba-rough)" fill="none" stroke="#fff" stroke-linecap="round"><path id="uba-mark-r" stroke-width="10" transform="rotate(9 48 28)" d="M64 13 Q 43 19 31 31 Q 46 39 63 43 M68 7 Q 58 8 50 13"/><path id="uba-mark-r2" stroke-width="11" transform="rotate(21 44 92)" d="M64 74 C 43 75 28 85 27 99 C 34 108 47 111 58 109"/></g></svg>
-        <h2 class="uba-title"><span class="wline"><span class="winner">Universal</span></span><br><span class="wline"><span class="winner">Base&nbsp;Asset</span></span></h2>
-        <p class="uba-sub">A single, adaptable image, built to work beautifully across every screen and experience.</p>
+        <p class="uba-eyebrow">Introducing</p>
+        <h2 class="uba-title"><span class="wline"><span class="winner">Universal&nbsp;Base&nbsp;Asset</span></span></h2>
+        <p class="uba-sub">A single, adaptable image, built to work beautifully<br>across every screen and experience</p>
       </div>
-      <a class="uba-btn" href="assets/files/UBA-Red-Bull-Streaming-Platform.psd" download>Download PSD</a>
+      <a class="uba-btn" href="assets/files/UBA-Red-Bull-Streaming-Platform.zip" download>Download UBA.psd</a>
     </div>
   </div>
   </div>
@@ -705,7 +720,7 @@
             <h3 class="dl-name">Image specs</h3>
             <p class="dl-desc">Start with the UBA PSD template. Export one JPG at 3840 &times; 2160, using 300 ppi, sRGB, and 8 bits per channel. The file must be between 3 to 12 MB.</p>
           </div>
-          <div class="dl-chips"><span>3840 &times; 2160</span><span>JPG</span><span>2mb min</span><span>20mb max</span><span>2&ndash;12mb ideal</span><a class="dl-shine" href="assets/files/UBA-Red-Bull-Streaming-Platform.psd" download aria-label="Download the UBA PSD template">UBA.PSD</a></div>
+          <div class="dl-chips"><span>3840 &times; 2160</span><span>JPG</span><span>3mb min</span><span>20mb max</span><span>3&ndash;12mb ideal</span><a class="dl-shine" href="assets/files/UBA-Red-Bull-Streaming-Platform.zip" download aria-label="Download the UBA PSD template">UBA.psd</a></div>
         </article>
         <article class="dl-card">
           <div class="dl-top">
@@ -734,12 +749,12 @@
     <div class="footer-card">
       <div class="fc-head" aria-label="Let's create future together">
         <p class="fc-line">Let&rsquo;s<br>create</p>
-        <p class="fc-word" id="fc-word">future</p>
+        <p class="fc-word" id="fc-word">stories</p>
         <p class="fc-line">together</p>
       </div>
       <div class="fc-bottom">
         <p class="fc-copy">&copy; 2026 All rights reserved.</p>
-        <p class="fc-contact">Got a question? please reach out at<br><a class="footer-mail" href="mailto:preet.gangrade@redbull.com">preet.gangrade@redbull.com</a></p>
+        <p class="fc-contact">Not sure about something?<br><a class="footer-mail" href="mailto:preet.gangrade@redbull.com,joshua.lamb@redbull.com,George.Sarantinos@redbull.com">Ask the team</a></p>
       </div>
     </div>
   </div>

@@ -4,3 +4,7 @@ node_modules/
 *.log
 assets/src/
 tools/node_modules/
+
+# raw PSD exceeds GitHub 100MiB limit; the site serves the zip
+assets/files/*.psd
+.claude/
