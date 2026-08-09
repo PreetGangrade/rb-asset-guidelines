@@ -511,6 +511,43 @@
       'stage-rbtv-1070.webp': '50% 45%','stage-stv-1070.webp': '45% 35%',
       'stage-rally-1070.webp': '50% 55%','tv-screen-rbtv-1100.webp': '50% 45%'
     };
+    /* imagery pool + assignment: only UBA-friendly shots (subject in the
+       distance, centred, no close-ups, no UI screenshots). The src values
+       authored in HO_FIELD above are OVERWRITTEN here by a greedy
+       assignment that maximises the distance between any two tiles showing
+       the same image, so identical images never appear near each other. */
+    var HO_POOL = [
+      'assets/img/ex-rbtv-1-960.webp', 'assets/img/ex-rbtv-2-960.webp',
+      'assets/img/ex-rbtv-5-960.webp', 'assets/img/ex-rbtv-6-960.webp',
+      'assets/img/ex-stv-1-960.webp',  'assets/img/ex-stv-3-960.webp',
+      'assets/img/ex-stv-4-960.webp',  'assets/img/ex-stv-5-960.webp',
+      'assets/img/ex-rally-1-960.webp','assets/img/ex-rally-3-960.webp',
+      'assets/img/ex-rally-4-960.webp','assets/img/ex-rally-5-960.webp',
+      'assets/img/stage-rbtv-1070.webp','assets/img/stage-rally-1070.webp'
+    ];
+    (function(){
+      var cap = Math.ceil(HO_FIELD.length / HO_POOL.length);
+      var used = {}, placed = [];
+      HO_FIELD.forEach(function(t){
+        var best = null, bestScore = -Infinity;
+        HO_POOL.forEach(function(src){
+          var n = used[src] || 0;
+          if (n >= cap) return;
+          var d = Infinity;
+          for (var i = 0; i < placed.length; i++){
+            if (placed[i].src !== src) continue;
+            var dd = Math.hypot(placed[i].x - t.x, placed[i].y - t.y);
+            if (dd < d) d = dd;
+          }
+          var score = Math.min(d, 2000) - n * 40;
+          if (score > bestScore){ bestScore = score; best = src; }
+        });
+        t.src = best;
+        used[best] = (used[best] || 0) + 1;
+        placed.push({ x: t.x, y: t.y, src: best });
+      });
+    })();
+
     var HO_RATIOS = [['16:9', 16/9], ['3:2', 3/2], ['4:3', 4/3], ['1:1', 1], ['4:5', 4/5], ['2:3', 2/3], ['9:16', 9/16]];
     function hoRatioLabel(w, h){
       var r = w / h, best = HO_RATIOS[0];
@@ -567,9 +604,15 @@
       /* gate intro: copy surfaces first (same rhythm as the hero), tiles
          then sweep in via their arriveDelay above */
       if (mgMQ.matches){
-        gsap.fromTo(['.mobile-gate .mg-logo', '.mg-in > *', '.mg-contact'],
-          { y: 22, opacity: 0 },
-          { y: 0, opacity: 1, duration: .85, ease: 'power4.out', stagger: .09, delay: .25 });
+        gsap.fromTo(['.mobile-gate .mg-logo', '.mg-in > *'],
+          { y: 30, opacity: 0 },
+          { y: 0, opacity: 1, duration: 1.3, ease: 'expo.out', stagger: .12, delay: .3 });
+        /* "Ask the team" is the closing beat: hidden from the very first
+           frame (explicit set - a delayed fromTo does NOT immediate-render
+           its from state), then slides up from the bottom only after the
+           copy AND the tile field have fully arrived */
+        gsap.set('.mg-contact', { y: 44, opacity: 0 });
+        gsap.to('.mg-contact', { y: 0, opacity: 1, duration: 1.1, ease: 'expo.out', delay: 3.4 });
       }
     }
 
@@ -691,12 +734,12 @@
        then do tiles surface (their 1.45s arriveDelay base) into a field
        that is already spiralling. Overlapping starts, Apple-style: nothing
        waits for anything else to fully finish. */
-    gsap.set('.ho-copy > *', { y: 26, opacity: 0 });
+    gsap.set('.ho-copy > *', { y: 34, opacity: 0 });
     gsap.set('.fg-nav', { y: -18, autoAlpha: 0 });
-    gsap.timeline({ delay: .25, onComplete: function(){ hoNavHandoff(); } })
-      .to('.ho-glow', { opacity: .96, duration: .9, ease: 'power2.out' })
-      .to('.ho-copy > *', { y: 0, opacity: 1, duration: .85, ease: 'power4.out', stagger: .08 }, '-=0.8')
-      .to('.fg-nav', { y: 0, autoAlpha: 1, duration: .7, ease: 'power3.out' }, '-=0.35');
+    gsap.timeline({ delay: .35, onComplete: function(){ hoNavHandoff(); } })
+      .to('.ho-glow', { opacity: .96, duration: 1.3, ease: 'power2.out' })
+      .to('.ho-copy > *', { y: 0, opacity: 1, duration: 1.4, ease: 'expo.out', stagger: .14 }, '-=1.1')
+      .to('.fg-nav', { y: 0, autoAlpha: 1, duration: 1.0, ease: 'expo.out' }, '-=0.9');
 
     /* exit: the first scroll movement commits to blue. Copy and glow release
        together, the background snaps to the blue hole, and the tile field

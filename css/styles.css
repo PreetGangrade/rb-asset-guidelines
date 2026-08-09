@@ -99,7 +99,7 @@ h1,h2,h3{font-weight:700;letter-spacing:-0.025em;line-height:1.04;text-wrap:bala
 @media (max-width:767.98px){ html, body{overflow:hidden;height:100%} }
 .mg-grad{
   position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(69% 34% at 50% 50%, #000e1e 20%, rgba(0,14,30,.8) 45%, rgba(0,14,30,.45) 70%, transparent 100%);
+  background:radial-gradient(74% 38% at 50% 50%, #000e1e 27%, rgba(0,14,30,.88) 50%, rgba(0,14,30,.55) 73%, transparent 100%);
 }
 .mg-fade{position:absolute;left:0;right:0;height:113px;pointer-events:none}
 .mg-fade-top{top:0;background:linear-gradient(0deg, rgba(0,14,30,0) 0%, rgba(0,14,30,.45) 30%, rgba(0,14,30,.8) 55%, #000e1e 80%)}
