@@ -14,7 +14,10 @@
   To swap any visual: replace the file in assets/img/, keep the name.
 -->
 
-<html lang="en">
+<!-- hero-orbit-mode is hardcoded so the orbit hero styles apply on FIRST
+     paint: without it the old classic hero (white bg) flashes before JS
+     adds the class -->
+<html lang="en" class="hero-orbit-mode">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -163,7 +166,7 @@
     </a>
     <a class="fg-pill fg-pill-cta" href="assets/files/UBA-Red-Bull-Streaming-Platform.zip" download>
       <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2.5v9M5.5 8 9 11.5 12.5 8M3 15h12"/></svg>
-      Download UBA PSD
+      Download UBA.psd
     </a>
   </nav>
 </div>
